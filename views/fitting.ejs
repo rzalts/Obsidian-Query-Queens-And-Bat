@@ -1,0 +1,41 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="table-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle">Fitting</h2>
+  <%- include('partials/flash') %>
+  <form method="GET" action="/fitting" style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+    <% if (show_id) { %><input type="hidden" name="show_id" value="<%= show_id %>"/><% } %>
+    <input type="text" name="search" value="<%= search %>" placeholder="Filter by status…" style="padding:8px 12px;border:1px solid #ccc;border-radius:6px;font-size:13px;flex:1;min-width:180px;"/>
+    <select name="sort" style="padding:8px 12px;border:1px solid #ccc;border-radius:6px;font-size:13px;">
+      <option value="fitting_id"     <%= sort==='fitting_id'     ? 'selected':'' %>>Sort: ID</option>
+      <option value="fitting_date"   <%= sort==='fitting_date'   ? 'selected':'' %>>Sort: Date</option>
+      <option value="fitting_status" <%= sort==='fitting_status' ? 'selected':'' %>>Sort: Status</option>
+    </select>
+    <button type="submit" class="btn btn-dark" style="padding:8px 18px;">Search</button>
+    <% if (search) { %><a href="/fitting<%= show_id?`?show_id=${show_id}`:'' %>" class="btn btn-outline" style="padding:8px 14px;">Clear</a><% } %>
+  </form>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Fitting ID</th><th>Look ID</th><th>Fitting Date</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <% fittings.forEach(f => { %>
+          <tr><td><%= f.fitting_id %></td><td><%= f.look_id %></td><td><%= f.fitting_date ? new Date(f.fitting_date).toLocaleDateString() : '' %></td><td><%= f.fitting_status %></td></tr>
+        <% }) %>
+        <% if (!fittings.length) { %><tr><td colspan="4" style="text-align:center;color:#888">No fittings found.</td></tr><% } %>
+      </tbody>
+    </table>
+  </div>
+  <div class="btn-group">
+    <a href="/fittingadd<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">+ Add Fitting</a>
+    <a href="/fittingdelete<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">- Delete Fitting</a>
+    <a href="/fittingstatus<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">Change Status</a>
+    <a href="/fitting/export<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">⬇ Export CSV</a>
+    <% if (show_id) { %><a href="/mymenudetail/<%= show_id %>" class="btn btn-outline">&#8592; Back</a><% } %>
+    <% if (!show_id && user && user.role === 'developer') { %><a href="/admin" class="btn btn-outline">&#8592; Dashboard</a><% } %>
+  </div>
+</div>
+<img class="page-wm page-wm-left" src="https://images.unsplash.com/photo-1558618047-3c8c76ca7d12?w=500&q=60" alt=""/>
+</body></html>

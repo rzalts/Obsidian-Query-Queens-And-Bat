@@ -1,0 +1,396 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  background: #ebebeb;
+  color: #111;
+  min-height: 100vh;
+}
+
+/* ── Nav ── */
+.top-nav {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 18px 32px;
+  gap: 20px;
+}
+
+.top-nav a, .top-nav button {
+  font-size: 14px;
+  color: #111;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #bbb;
+  object-fit: cover;
+}
+
+/* ── Page Titles ── */
+.page-title {
+  text-align: center;
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: 6px;
+}
+
+.page-subtitle {
+  text-align: center;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: 400;
+  margin-bottom: 36px;
+}
+
+/* ── Landing ── */
+.landing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 32px;
+}
+
+.landing-title {
+  font-size: clamp(4rem, 14vw, 9rem);
+  font-weight: 900;
+  letter-spacing: -4px;
+}
+
+.landing-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.btn:hover { opacity: 0.85; }
+
+.btn-dark {
+  background: #111;
+  color: #fff;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #111;
+  border: 1.5px solid #111;
+}
+
+.btn-sm {
+  padding: 8px 18px;
+  font-size: 13px;
+}
+
+.btn-group {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+/* ── Forms ── */
+.form-container {
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #ddd;
+  border-radius: 10px;
+  font-size: 14px;
+  background: #fff;
+  color: #111;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #111;
+}
+
+.form-group input::placeholder { color: #aaa; }
+
+.form-link {
+  text-align: center;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 14px;
+}
+
+.form-link a { color: #007aff; text-decoration: none; }
+
+/* ── Auth Pages ── */
+.auth-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.auth-title {
+  text-align: center;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.auth-subtitle {
+  text-align: center;
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 32px;
+}
+
+/* ── Shows Grid ── */
+.shows-page {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.shows-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px 20px;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+  .shows-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.show-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #111;
+}
+
+.show-logo {
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
+  filter: grayscale(100%);
+}
+
+.show-logo-placeholder {
+  width: 130px;
+  height: 130px;
+  background: #ccc;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #666;
+}
+
+.show-label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ── Tables ── */
+.table-page {
+  padding: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 32px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+table th {
+  background: #111;
+  color: #fff;
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+table td {
+  padding: 12px 14px;
+  font-size: 13px;
+  border-bottom: 1px solid #e5e5e5;
+  color: #222;
+}
+
+table tr:hover td { background: #f7f7f7; }
+
+/* ── Show Menu Detail ── */
+.menu-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .menu-detail-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.menu-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #111;
+  cursor: pointer;
+}
+
+.menu-card-img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  filter: grayscale(20%);
+}
+
+.menu-card-label {
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 400;
+  color: #333;
+}
+
+/* ── Show Single View ── */
+.show-single {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  gap: 16px;
+}
+
+.show-single-logo {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  filter: grayscale(100%);
+}
+
+.show-single-info {
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.8;
+  color: #333;
+}
+
+/* ── Flash Messages ── */
+.flash {
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin: 0 auto 20px;
+  max-width: 460px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.flash-success { background: #d4edda; color: #155724; }
+.flash-error   { background: #f8d7da; color: #721c24; }
+
+/* ── Upload Area ── */
+.upload-box {
+  width: 100px;
+  height: 100px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: #999;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.upload-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+/* ── Page Watermarks ── */
+.page-wm {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 30%;
+  max-width: 400px;
+  opacity: 0.1;
+  pointer-events: none;
+  z-index: 0;
+}
+.page-wm-left {
+  right: auto;
+  left: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .form-container { max-width: 100%; }
+  .shows-grid { grid-template-columns: repeat(2, 1fr); }
+}

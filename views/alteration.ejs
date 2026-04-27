@@ -1,0 +1,47 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="table-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle">Alteration</h2>
+  <%- include('partials/flash') %>
+  <form method="GET" action="/alteration" style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+    <% if (show_id) { %><input type="hidden" name="show_id" value="<%= show_id %>"/><% } %>
+    <input type="text" name="search" value="<%= search %>" placeholder="Search by type or status…" style="padding:8px 12px;border:1px solid #ccc;border-radius:6px;font-size:13px;flex:1;min-width:180px;"/>
+    <select name="sort" style="padding:8px 12px;border:1px solid #ccc;border-radius:6px;font-size:13px;">
+      <option value="alteration_id"     <%= sort==='alteration_id'     ? 'selected':'' %>>Sort: ID</option>
+      <option value="alteration_type"   <%= sort==='alteration_type'   ? 'selected':'' %>>Sort: Type</option>
+      <option value="date_needed_by"    <%= sort==='date_needed_by'    ? 'selected':'' %>>Sort: Date Needed</option>
+      <option value="alteration_status" <%= sort==='alteration_status' ? 'selected':'' %>>Sort: Status</option>
+    </select>
+    <button type="submit" class="btn btn-dark" style="padding:8px 18px;">Search</button>
+    <% if (search) { %><a href="/alteration<%= show_id?`?show_id=${show_id}`:'' %>" class="btn btn-outline" style="padding:8px 14px;">Clear</a><% } %>
+  </form>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Alteration ID</th><th>Item ID</th><th>Fitting ID</th><th>Alteration Type</th><th>Date Needed By</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <% alterations.forEach(a => { %>
+          <tr>
+            <td><%= a.alteration_id %></td><td><%= a.item_id %></td><td><%= a.fitting_id %></td>
+            <td><%= a.alteration_type %></td>
+            <td><%= a.date_needed_by ? new Date(a.date_needed_by).toLocaleDateString() : '' %></td>
+            <td><%= a.alteration_status %></td>
+          </tr>
+        <% }) %>
+        <% if (!alterations.length) { %><tr><td colspan="6" style="text-align:center;color:#888">No alterations found.</td></tr><% } %>
+      </tbody>
+    </table>
+  </div>
+  <div class="btn-group">
+    <a href="/alterationadd<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">+ Add New Alteration</a>
+    <a href="/alterationdelete<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">- Delete an Alteration</a>
+    <a href="/alterationstatus<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">Change Status</a>
+    <a href="/alteration/export<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">⬇ Export CSV</a>
+    <% if (show_id) { %><a href="/mymenudetail/<%= show_id %>" class="btn btn-outline">&#8592; Back</a><% } %>
+    <% if (!show_id && user && user.role === 'developer') { %><a href="/admin" class="btn btn-outline">&#8592; Dashboard</a><% } %>
+  </div>
+</div>
+<img class="page-wm" src="https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?w=500&q=60" alt=""/>
+</body></html>

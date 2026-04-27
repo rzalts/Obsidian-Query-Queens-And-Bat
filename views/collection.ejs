@@ -1,0 +1,48 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="table-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle">Collection</h2>
+  <%- include('partials/flash') %>
+  <form method="GET" action="/collection" style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+    <% if (show_id) { %><input type="hidden" name="show_id" value="<%= show_id %>"/><% } %>
+    <input type="text" name="search" value="<%= search %>" placeholder="Search by name or brand…" style="padding:8px 12px;border:1px solid #ccc;border-radius:6px;font-size:13px;flex:1;min-width:180px;"/>
+    <select name="sort" style="padding:8px 12px;border:1px solid #ccc;border-radius:6px;font-size:13px;">
+      <option value="collection_id"     <%= sort==='collection_id'     ? 'selected':'' %>>Sort: ID</option>
+      <option value="collection_name"   <%= sort==='collection_name'   ? 'selected':'' %>>Sort: Name</option>
+      <option value="brand"             <%= sort==='brand'             ? 'selected':'' %>>Sort: Brand</option>
+      <option value="season"            <%= sort==='season'            ? 'selected':'' %>>Sort: Season</option>
+      <option value="collection_year"   <%= sort==='collection_year'   ? 'selected':'' %>>Sort: Year</option>
+      <option value="collection_status" <%= sort==='collection_status' ? 'selected':'' %>>Sort: Status</option>
+    </select>
+    <button type="submit" class="btn btn-dark" style="padding:8px 18px;">Search</button>
+    <% if (search) { %><a href="/collection<%= show_id?`?show_id=${show_id}`:'' %>" class="btn btn-outline" style="padding:8px 14px;">Clear</a><% } %>
+  </form>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Collection ID</th><th>Collection Name</th><th>Brand</th><th>Season</th><th>Year</th><th>Status</th><th>Looks</th></tr>
+      </thead>
+      <tbody>
+        <% collections.forEach(c => { %>
+          <tr>
+            <td><%= c.collection_id %></td><td><%= c.collection_name %></td><td><%= c.brand %></td>
+            <td><%= c.season %></td><td><%= c.collection_year %></td><td><%= c.collection_status %></td>
+            <td><%= c.look_count ?? 0 %></td>
+          </tr>
+        <% }) %>
+        <% if (!collections.length) { %><tr><td colspan="7" style="text-align:center;color:#888">No collections found.</td></tr><% } %>
+      </tbody>
+    </table>
+  </div>
+  <div class="btn-group">
+    <a href="/collectionadd<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">+ Add Collection</a>
+    <a href="/collectiondelete<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">- Delete Collection</a>
+    <a href="/collectionstatus<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">Change Status</a>
+    <a href="/collection/export<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">⬇ Export CSV</a>
+    <% if (show_id) { %><a href="/mymenudetail/<%= show_id %>" class="btn btn-outline">&#8592; Back</a><% } %>
+    <% if (!show_id && user && user.role === 'developer') { %><a href="/admin" class="btn btn-outline">&#8592; Dashboard</a><% } %>
+  </div>
+</div>
+<img class="page-wm" src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=500&q=60" alt=""/>
+</body></html>

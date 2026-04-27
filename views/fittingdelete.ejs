@@ -1,0 +1,13 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="shows-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle">Fitting</h2>
+  <%- include('partials/flash') %>
+  <form class="form-container" action="/fittingdelete" method="POST">
+    <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
+    <div class="form-group"><label>Fitting ID</label><input type="number" name="fitting_id" placeholder="Enter Fitting ID" required/></div>
+    <button type="submit" class="btn btn-dark" style="width:100%">- Delete Fitting</button>
+  </form>
+</div>
+</body></html>

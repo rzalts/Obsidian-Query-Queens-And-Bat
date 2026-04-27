@@ -1,0 +1,40 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="table-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle">Location</h2>
+  <%- include('partials/flash') %>
+  <form method="GET" action="/location" style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+    <% if (show_id) { %><input type="hidden" name="show_id" value="<%= show_id %>"/><% } %>
+    <input type="text" name="search" value="<%= search %>" placeholder="Search by name or address…" style="padding:8px 12px;border:1px solid #ccc;border-radius:6px;font-size:13px;flex:1;min-width:180px;"/>
+    <select name="sort" style="padding:8px 12px;border:1px solid #ccc;border-radius:6px;font-size:13px;">
+      <option value="location_id"      <%= sort==='location_id'      ? 'selected':'' %>>Sort: ID</option>
+      <option value="location_name"    <%= sort==='location_name'    ? 'selected':'' %>>Sort: Name</option>
+      <option value="location_address" <%= sort==='location_address' ? 'selected':'' %>>Sort: Address</option>
+    </select>
+    <button type="submit" class="btn btn-dark" style="padding:8px 18px;">Search</button>
+    <% if (search) { %><a href="/location<%= show_id?`?show_id=${show_id}`:'' %>" class="btn btn-outline" style="padding:8px 14px;">Clear</a><% } %>
+  </form>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Location ID</th><th>Location Name</th><th>Address</th></tr>
+      </thead>
+      <tbody>
+        <% locations.forEach(l => { %>
+          <tr><td><%= l.location_id %></td><td><%= l.location_name %></td><td><%= l.location_address %></td></tr>
+        <% }) %>
+        <% if (!locations.length) { %><tr><td colspan="3" style="text-align:center;color:#888">No locations found.</td></tr><% } %>
+      </tbody>
+    </table>
+  </div>
+  <div class="btn-group">
+    <a href="/locationadd<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">+ Add Location</a>
+    <a href="/locationdelete<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">- Delete Location</a>
+    <a href="/location/export<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">⬇ Export CSV</a>
+    <% if (show_id) { %><a href="/mymenudetail/<%= show_id %>" class="btn btn-outline">&#8592; Back</a><% } %>
+    <% if (!show_id && user && user.role === 'developer') { %><a href="/admin" class="btn btn-outline">&#8592; Dashboard</a><% } %>
+  </div>
+</div>
+<img class="page-wm" src="https://images.unsplash.com/photo-1524660988542-c9b2f9f2f6b1?w=500&q=60" alt=""/>
+</body></html>

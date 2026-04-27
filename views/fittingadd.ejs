@@ -1,0 +1,16 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="shows-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle">Fitting</h2>
+  <%- include('partials/flash') %>
+  <form class="form-container" action="/fittingadd" method="POST">
+    <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
+    <div class="form-group"><label>Look ID</label><input type="number" name="look_id" placeholder="Enter Look ID" required/></div>
+    <div class="form-group"><label>Fitting Date</label><input type="date" name="fitting_date"/></div>
+    <div class="form-group"><label>Status</label><input type="text" name="fitting_status" placeholder="e.g. Finished / Not Finished"/></div>
+    <button type="submit" class="btn btn-dark" style="width:100%">+ Add New Fitting</button>
+  </form>
+</div>
+<img class="page-wm page-wm-left" src="https://images.unsplash.com/photo-1558618047-3c8c76ca7d12?w=500&q=60" alt=""/>
+</body></html>

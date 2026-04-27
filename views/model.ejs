@@ -1,0 +1,41 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="table-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle">Model</h2>
+  <%- include('partials/flash') %>
+  <form method="GET" action="/model" style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+    <% if (show_id) { %><input type="hidden" name="show_id" value="<%= show_id %>"/><% } %>
+    <input type="text" name="search" value="<%= search %>" placeholder="Search by name or agency…" style="padding:8px 12px;border:1px solid #ccc;border-radius:6px;font-size:13px;flex:1;min-width:180px;"/>
+    <select name="sort" style="padding:8px 12px;border:1px solid #ccc;border-radius:6px;font-size:13px;">
+      <option value="model_id"   <%= sort==='model_id'   ? 'selected':'' %>>Sort: ID</option>
+      <option value="first_name" <%= sort==='first_name' ? 'selected':'' %>>Sort: First Name</option>
+      <option value="last_name"  <%= sort==='last_name'  ? 'selected':'' %>>Sort: Last Name</option>
+      <option value="agency"     <%= sort==='agency'     ? 'selected':'' %>>Sort: Agency</option>
+    </select>
+    <button type="submit" class="btn btn-dark" style="padding:8px 18px;">Search</button>
+    <% if (search) { %><a href="/model<%= show_id?`?show_id=${show_id}`:'' %>" class="btn btn-outline" style="padding:8px 14px;">Clear</a><% } %>
+  </form>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Model ID</th><th>First Name</th><th>Last Name</th><th>Agency</th><th>Email</th><th>Phone Number</th></tr>
+      </thead>
+      <tbody>
+        <% models.forEach(m => { %>
+          <tr><td><%= m.model_id %></td><td><%= m.first_name %></td><td><%= m.last_name %></td><td><%= m.agency %></td><td><%= m.email %></td><td><%= m.phone_number %></td></tr>
+        <% }) %>
+        <% if (!models.length) { %><tr><td colspan="6" style="text-align:center;color:#888">No models found.</td></tr><% } %>
+      </tbody>
+    </table>
+  </div>
+  <div class="btn-group">
+    <a href="/modeladd<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">+ Add Model</a>
+    <a href="/modeldelete<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">- Delete Model</a>
+    <a href="/model/export<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">⬇ Export CSV</a>
+    <% if (show_id) { %><a href="/mymenudetail/<%= show_id %>" class="btn btn-outline">&#8592; Back</a><% } %>
+    <% if (!show_id && user && user.role === 'developer') { %><a href="/admin" class="btn btn-outline">&#8592; Dashboard</a><% } %>
+  </div>
+</div>
+<img class="page-wm" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=500&q=60" alt=""/>
+</body></html>

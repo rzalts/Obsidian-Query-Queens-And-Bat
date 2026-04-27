@@ -1,0 +1,33 @@
+{
+  "name": "obsidian-by-query-queens-bat",
+  "version": "1.0.0",
+  "description": "OBSIDIAN is a web-based platform designed to streamline the complex workflow of runway show production. It provides a centralized interface where coordinators and backstage teams can manage all aspects of a fashion show in real time, eliminating the need for fragmented tools or manual tracking.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/batorgillts/OBSIDIAN-by-Query-Queens-Bat.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/batorgillts/OBSIDIAN-by-Query-Queens-Bat/issues"
+  },
+  "homepage": "https://github.com/batorgillts/OBSIDIAN-by-Query-Queens-Bat#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "connect-flash": "^0.1.1",
+    "dotenv": "^17.4.2",
+    "ejs": "^5.0.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "multer": "^2.1.1",
+    "mysql2": "^3.22.0"
+  }
+}

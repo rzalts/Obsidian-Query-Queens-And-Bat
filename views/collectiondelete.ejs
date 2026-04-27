@@ -1,0 +1,13 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="shows-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle">Collection</h2>
+  <%- include('partials/flash') %>
+  <form class="form-container" action="/collectiondelete" method="POST">
+    <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
+    <div class="form-group"><label>Collection ID</label><input type="number" name="collection_id" placeholder="Enter Collection ID" required/></div>
+    <button type="submit" class="btn btn-dark" style="width:100%">- Delete Collection</button>
+  </form>
+</div>
+</body></html>

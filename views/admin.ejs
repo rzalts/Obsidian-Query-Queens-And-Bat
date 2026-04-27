@@ -1,0 +1,117 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+
+<div class="table-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle">Developer Dashboard</h2>
+  <%- include('partials/flash') %>
+
+  <!-- System-wide stats — each card links to full data view -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-bottom:36px;">
+    <a href="/myshows" class="stat-card">
+      <span class="stat-number"><%= stats.total_shows %></span>
+      <span class="stat-label">Shows</span>
+    </a>
+    <a href="/collection" class="stat-card">
+      <span class="stat-number"><%= stats.total_collections %></span>
+      <span class="stat-label">Collections</span>
+    </a>
+    <a href="/look" class="stat-card">
+      <span class="stat-number"><%= stats.total_looks %></span>
+      <span class="stat-label">Looks</span>
+    </a>
+    <a href="/item" class="stat-card">
+      <span class="stat-number"><%= stats.total_items %></span>
+      <span class="stat-label">Items</span>
+    </a>
+    <a href="/model" class="stat-card">
+      <span class="stat-number"><%= stats.total_models %></span>
+      <span class="stat-label">Models</span>
+    </a>
+    <a href="/fitting" class="stat-card">
+      <span class="stat-number"><%= stats.total_fittings %></span>
+      <span class="stat-label">Fittings</span>
+    </a>
+    <a href="/alteration" class="stat-card">
+      <span class="stat-number"><%= stats.total_alterations %></span>
+      <span class="stat-label">Alterations</span>
+    </a>
+    <a href="/location" class="stat-card">
+      <span class="stat-number"><%= stats.total_coordinators %></span>
+      <span class="stat-label">Locations</span>
+    </a>
+  </div>
+
+  <!-- All coordinators table -->
+  <h3 style="font-size:15px;font-weight:600;margin-bottom:12px;letter-spacing:.5px;">ALL COORDINATORS</h3>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Role</th>
+          <th>Shows</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% coordinators.forEach(c => { %>
+          <tr>
+            <td><%= c.user_id %></td>
+            <td><%= c.first_name %> <%= c.last_name %></td>
+            <td><%= c.email %></td>
+            <td><%= c.phone_number || '—' %></td>
+            <td>
+              <span style="
+                background:<%= c.reg_role === 'developer' ? '#111' : '#e8e8e8' %>;
+                color:<%= c.reg_role === 'developer' ? '#fff' : '#333' %>;
+                padding:3px 10px;border-radius:12px;font-size:12px;font-weight:500;">
+                <%= c.reg_role || 'coordinator' %>
+              </span>
+            </td>
+            <td style="font-weight:600;"><%= c.show_count %></td>
+          </tr>
+        <% }) %>
+        <% if (!coordinators.length) { %>
+          <tr><td colspan="6" style="text-align:center;color:#888">No coordinators found.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+.stat-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  text-decoration: none;
+  color: inherit;
+  transition: transform .15s, box-shadow .15s;
+  cursor: pointer;
+}
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.13);
+}
+.stat-number {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111;
+}
+.stat-label {
+  font-size: 12px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+}
+</style>
+
+</body></html>

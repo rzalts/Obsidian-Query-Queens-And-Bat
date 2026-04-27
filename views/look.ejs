@@ -1,0 +1,40 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="table-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle">Look</h2>
+  <%- include('partials/flash') %>
+  <form method="GET" action="/look" style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+    <% if (show_id) { %><input type="hidden" name="show_id" value="<%= show_id %>"/><% } %>
+    <input type="text" name="search" value="<%= search %>" placeholder="Search by category or description…" style="padding:8px 12px;border:1px solid #ccc;border-radius:6px;font-size:13px;flex:1;min-width:180px;"/>
+    <select name="sort" style="padding:8px 12px;border:1px solid #ccc;border-radius:6px;font-size:13px;">
+      <option value="look_id"          <%= sort==='look_id'          ? 'selected':'' %>>Sort: ID</option>
+      <option value="look_category"    <%= sort==='look_category'    ? 'selected':'' %>>Sort: Category</option>
+      <option value="look_description" <%= sort==='look_description' ? 'selected':'' %>>Sort: Description</option>
+    </select>
+    <button type="submit" class="btn btn-dark" style="padding:8px 18px;">Search</button>
+    <% if (search) { %><a href="/look<%= show_id?`?show_id=${show_id}`:'' %>" class="btn btn-outline" style="padding:8px 14px;">Clear</a><% } %>
+  </form>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Look ID</th><th>Collection ID</th><th>Model ID</th><th>Category</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <% looks.forEach(l => { %>
+          <tr><td><%= l.look_id %></td><td><%= l.collection_id %></td><td><%= l.model_id %></td><td><%= l.look_category %></td><td><%= l.look_description %></td></tr>
+        <% }) %>
+        <% if (!looks.length) { %><tr><td colspan="5" style="text-align:center;color:#888">No looks found.</td></tr><% } %>
+      </tbody>
+    </table>
+  </div>
+  <div class="btn-group">
+    <a href="/lookadd<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">+ Add Look</a>
+    <a href="/lookdelete<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">- Delete Look</a>
+    <a href="/look/export<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">⬇ Export CSV</a>
+    <% if (show_id) { %><a href="/mymenudetail/<%= show_id %>" class="btn btn-outline">&#8592; Back</a><% } %>
+    <% if (!show_id && user && user.role === 'developer') { %><a href="/admin" class="btn btn-outline">&#8592; Dashboard</a><% } %>
+  </div>
+</div>
+<img class="page-wm" src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500&q=60" alt=""/>
+</body></html>

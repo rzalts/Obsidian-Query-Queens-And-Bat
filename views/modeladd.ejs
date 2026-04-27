@@ -1,0 +1,17 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="shows-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle">Model</h2>
+  <%- include('partials/flash') %>
+  <form class="form-container" action="/modeladd" method="POST">
+    <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
+    <div class="form-group"><label>First Name</label><input type="text" name="first_name" placeholder="Enter First Name" required/></div>
+    <div class="form-group"><label>Last Name</label><input type="text" name="last_name" placeholder="Enter Last Name" required/></div>
+    <div class="form-group"><label>Agency</label><input type="text" name="agency" placeholder="Enter Agency"/></div>
+    <div class="form-group"><label>Email</label><input type="email" name="email" placeholder="Enter Email"/></div>
+    <div class="form-group"><label>Phone Number</label><input type="tel" name="phone_number" placeholder="Enter Phone Number"/></div>
+    <button type="submit" class="btn btn-dark" style="width:100%">+ Add Model</button>
+  </form>
+</div>
+</body></html>

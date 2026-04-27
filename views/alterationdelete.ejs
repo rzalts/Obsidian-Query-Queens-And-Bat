@@ -1,0 +1,13 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="shows-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle">Alteration</h2>
+  <%- include('partials/flash') %>
+  <form class="form-container" action="/alterationdelete" method="POST">
+    <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
+    <div class="form-group"><label>Alteration ID</label><input type="number" name="alteration_id" placeholder="Enter Alteration ID" required/></div>
+    <button type="submit" class="btn btn-dark" style="width:100%">- Delete an Alteration</button>
+  </form>
+</div>
+</body></html>

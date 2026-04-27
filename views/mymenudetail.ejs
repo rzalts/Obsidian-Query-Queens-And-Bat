@@ -1,0 +1,41 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="shows-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle"><%= show.show_name %></h2>
+  <div class="menu-detail-grid">
+    <a href="/collection?show_id=<%= show.show_id %>" class="menu-card">
+      <img src="/images/collection.jpg" alt="Collection" class="menu-card-img"/>
+      <span class="menu-card-label">Collection</span>
+    </a>
+    <a href="/alteration?show_id=<%= show.show_id %>" class="menu-card">
+      <img src="/images/alteration.jpg" alt="Alteration" class="menu-card-img"/>
+      <span class="menu-card-label">Alteration</span>
+    </a>
+    <a href="/showorder?show_id=<%= show.show_id %>" class="menu-card">
+      <img src="/images/showorder.jpg" alt="Show Order" class="menu-card-img"/>
+      <span class="menu-card-label">Show Order</span>
+    </a>
+    <a href="/look?show_id=<%= show.show_id %>" class="menu-card">
+      <img src="/images/look.jpg" alt="Look" class="menu-card-img"/>
+      <span class="menu-card-label">Look</span>
+    </a>
+    <a href="/model?show_id=<%= show.show_id %>" class="menu-card">
+      <img src="/images/model.jpg" alt="Model" class="menu-card-img"/>
+      <span class="menu-card-label">Model</span>
+    </a>
+    <a href="/item?show_id=<%= show.show_id %>" class="menu-card">
+      <img src="/images/item.jpg" alt="Item" class="menu-card-img"/>
+      <span class="menu-card-label">Item</span>
+    </a>
+    <a href="/fitting?show_id=<%= show.show_id %>" class="menu-card">
+      <img src="/images/fitting.jpg" alt="Fitting" class="menu-card-img"/>
+      <span class="menu-card-label">Fitting</span>
+    </a>
+    <a href="/location?show_id=<%= show.show_id %>" class="menu-card">
+      <img src="/images/location.jpg" alt="Location" class="menu-card-img"/>
+      <span class="menu-card-label">Location</span>
+    </a>
+  </div>
+</div>
+</body></html>

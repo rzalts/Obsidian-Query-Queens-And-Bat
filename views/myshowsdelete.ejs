@@ -1,0 +1,23 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="shows-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle">My Shows</h2>
+  <%- include('partials/flash') %>
+  <form class="form-container" action="/myshowsdelete" method="POST">
+    <div class="form-group">
+      <label>Show Name</label>
+      <input type="text" name="show_name" placeholder="Enter Show Name" required/>
+    </div>
+    <div class="form-group">
+      <label>Show Date</label>
+      <input type="date" name="show_date" required/>
+    </div>
+    <div class="form-group">
+      <label>Venue</label>
+      <input type="text" name="venue" placeholder="Enter Venue" required/>
+    </div>
+    <button type="submit" class="btn btn-dark" style="width:100%">- Delete Show</button>
+  </form>
+</div>
+</body></html>

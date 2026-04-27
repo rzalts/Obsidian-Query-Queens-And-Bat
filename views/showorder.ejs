@@ -1,0 +1,27 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="table-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle">Show Order</h2>
+  <%- include('partials/flash') %>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Show Order ID</th><th>Show ID</th><th>Look ID</th><th>Sequence Number</th></tr>
+      </thead>
+      <tbody>
+        <% orders.forEach(o => { %>
+          <tr><td><%= o.show_order_id %></td><td><%= o.show_id %></td><td><%= o.look_id %></td><td><%= o.sequence_number %></td></tr>
+        <% }) %>
+        <% if (!orders.length) { %><tr><td colspan="4" style="text-align:center;color:#888">No show order entries.</td></tr><% } %>
+      </tbody>
+    </table>
+  </div>
+  <div class="btn-group">
+    <a href="/showorderadd<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">+ Add to Show Order</a>
+    <a href="/showorderdelete<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">- Delete from Show Order</a>
+    <% if (show_id) { %><a href="/mymenudetail/<%= show_id %>" class="btn btn-outline">&#8592; Back</a><% } %>
+  </div>
+</div>
+<img class="page-wm" src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=500&q=60" alt=""/>
+</body></html>

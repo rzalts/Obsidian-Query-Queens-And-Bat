@@ -1,0 +1,62 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="table-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle">Item</h2>
+  <%- include('partials/flash') %>
+
+  <!-- Filter & Sort bar -->
+  <form method="GET" action="/item" style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+    <% if (show_id) { %><input type="hidden" name="show_id" value="<%= show_id %>"/><% } %>
+    <input type="text" name="category" value="<%= category %>"
+      placeholder="Filter by category…"
+      style="padding:8px 12px;border:1px solid #ccc;border-radius:6px;font-size:13px;flex:1;min-width:180px;"/>
+    <select name="sort" style="padding:8px 12px;border:1px solid #ccc;border-radius:6px;font-size:13px;">
+      <option value="item_id"        <%= sort==='item_id'        ? 'selected' : '' %>>Sort: ID</option>
+      <option value="item_category"  <%= sort==='item_category'  ? 'selected' : '' %>>Sort: Category</option>
+      <option value="item_size"      <%= sort==='item_size'      ? 'selected' : '' %>>Sort: Size</option>
+      <option value="item_condition" <%= sort==='item_condition' ? 'selected' : '' %>>Sort: Condition</option>
+    </select>
+    <button type="submit" class="btn btn-dark" style="padding:8px 18px;">Search</button>
+    <% if (category) { %>
+      <a href="/item<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-outline" style="padding:8px 14px;">Clear</a>
+    <% } %>
+  </form>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>Item ID</th><th>Location ID</th><th>Collection ID</th><th>Category</th><th>Description</th><th>Version</th><th>Size</th><th>Condition</th><th>Pending Alterations</th></tr>
+      </thead>
+      <tbody>
+        <% items.forEach(i => { %>
+          <tr>
+            <td><%= i.item_id %></td>
+            <td><%= i.location_id %></td>
+            <td><%= i.collection_id %></td>
+            <td><%= i.item_category %></td>
+            <td><%= i.item_description %></td>
+            <td><%= i.item_version %></td>
+            <td><%= i.item_size %></td>
+            <td><%= i.item_condition %></td>
+            <td style="text-align:center"><% if ((i.pending_alt ?? 0) > 0) { %><span style="color:#dc3545;font-weight:600"><%= i.pending_alt %></span><% } else { %>0<% } %></td>
+          </tr>
+        <% }) %>
+        <% if (!items.length) { %>
+          <tr><td colspan="9" style="text-align:center;color:#888">No items found.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="btn-group">
+    <a href="/itemadd<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">+ Add Item</a>
+    <a href="/itemdelete<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">- Delete Item</a>
+    <a href="/itemmove<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">&#8594; Move Item</a>
+    <a href="/item/export<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-dark">⬇ Export CSV</a>
+    <% if (show_id) { %><a href="/mymenudetail/<%= show_id %>" class="btn btn-outline">&#8592; Back</a><% } %>
+    <% if (!show_id && user && user.role === 'developer') { %><a href="/admin" class="btn btn-outline">&#8592; Dashboard</a><% } %>
+  </div>
+</div>
+<img class="page-wm" src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=500&q=60" alt=""/>
+</body></html>

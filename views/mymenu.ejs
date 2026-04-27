@@ -1,0 +1,23 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="shows-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle"><%= show.show_name %></h2>
+  <div class="show-single">
+    <% if (show.logo_path) { %>
+      <img src="<%= show.logo_path %>" alt="<%= show.show_name %>" class="show-single-logo"/>
+    <% } else { %>
+      <div class="show-logo-placeholder" style="width:200px;height:200px">No Logo</div>
+    <% } %>
+    <div class="show-single-info">
+      <strong><%= show.venue %></strong><br/>
+      <%= show.address %><br/>
+      <%= show.show_date ? new Date(show.show_date).toLocaleDateString() : '' %><br/>
+      <% if (show.start_time && show.end_time) { %>
+        <%= show.start_time %> - <%= show.end_time %>
+      <% } %>
+    </div>
+    <a href="/mymenudetail/<%= show.show_id %>" class="btn btn-dark">More Details</a>
+  </div>
+</div>
+</body></html>

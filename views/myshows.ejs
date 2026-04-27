@@ -1,0 +1,34 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="shows-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle">My Shows</h2>
+  <%- include('partials/flash') %>
+  <div class="shows-grid">
+    <% shows.forEach(show => { %>
+      <a href="/mymenu/<%= show.show_id %>" class="show-card">
+        <% if (show.logo_path) { %>
+          <img src="<%= show.logo_path %>" alt="<%= show.show_name %>" class="show-logo"/>
+        <% } else { %>
+          <div class="show-logo-placeholder">No Logo</div>
+        <% } %>
+        <span class="show-label"><%= show.show_name %></span>
+        <% if (isAdmin && show.coordinator_name) { %>
+          <span style="font-size:11px;color:#888;margin-top:2px;"><%= show.coordinator_name %></span>
+        <% } %>
+        <span style="font-size:11px;margin-top:3px;padding:2px 7px;border-radius:10px;background:<%= show.ready ? '#d4edda' : '#fff3cd' %>;color:<%= show.ready ? '#155724' : '#856404' %>">
+          <%= show.ready ? '✓ Ready' : '⏳ Not Ready' %>
+        </span>
+      </a>
+    <% }) %>
+    <% if (!shows.length) { %>
+      <p style="grid-column:1/-1;text-align:center;color:#888;font-size:14px">No shows yet. Add your first show!</p>
+    <% } %>
+  </div>
+  <div class="btn-group">
+    <a href="/myshowsregistration" class="btn btn-dark">+ Add Show</a>
+    <a href="/myshowsdelete" class="btn btn-dark">- Delete Show</a>
+    <% if (isAdmin) { %><a href="/admin" class="btn btn-outline">&#8592; Dashboard</a><% } %>
+  </div>
+</div>
+</body></html>

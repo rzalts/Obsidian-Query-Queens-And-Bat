@@ -1,0 +1,17 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="shows-page">
+  <h1 class="page-title">OBSIDIAN</h1>
+  <h2 class="page-subtitle">Look</h2>
+  <%- include('partials/flash') %>
+  <form class="form-container" action="/lookadd" method="POST">
+    <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
+    <div class="form-group"><label>Collection ID</label><input type="number" name="collection_id" placeholder="Enter Collection ID" required/></div>
+    <div class="form-group"><label>Model ID</label><input type="number" name="model_id" placeholder="Enter Model ID" required/></div>
+    <div class="form-group"><label>Category</label><input type="text" name="look_category" placeholder="Enter Category"/></div>
+    <div class="form-group"><label>Description</label><input type="text" name="look_description" placeholder="Enter Description"/></div>
+    <button type="submit" class="btn btn-dark" style="width:100%">+ Add Look</button>
+  </form>
+</div>
+<img class="page-wm" src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500&q=60" alt=""/>
+</body></html>
