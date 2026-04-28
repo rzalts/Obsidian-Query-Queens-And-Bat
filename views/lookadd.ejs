@@ -1,7 +1,7 @@
 <%- include('partials/head') %>
 <%- include('partials/nav') %>
 <div class="shows-page">
-  <h1 class="page-title">OBSIDIAN</h1>
+  <a href="<%= user && user.role === 'developer' ? '/admin' : '/myshows' %>" style="text-decoration:none;color:inherit;display:block;"><h1 class="page-title">OBSIDIAN</h1></a>
   <h2 class="page-subtitle">Look</h2>
   <%- include('partials/flash') %>
   <form class="form-container" action="/lookadd" method="POST">

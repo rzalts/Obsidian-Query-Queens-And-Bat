@@ -13,7 +13,10 @@
     </div>
     <div class="form-group">
       <label>Email</label>
-      <input type="email" name="email" placeholder="Enter your Email" required/>
+      <input type="email" name="email" placeholder="Enter your Email (e.g. name@example.com)"
+             pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
+             title="Please enter a valid email address (e.g. name@example.com)"
+             required/>
     </div>
     <div class="form-group">
       <label>Phone Number</label>

@@ -1,7 +1,7 @@
 <%- include('partials/head') %>
 <%- include('partials/nav') %>
 <div class="table-page">
-  <h1 class="page-title">OBSIDIAN</h1>
+  <a href="<%= user && user.role === 'developer' ? '/admin' : '/myshows' %>" style="text-decoration:none;color:inherit;display:block;"><h1 class="page-title">OBSIDIAN</h1></a>
   <h2 class="page-subtitle">Alteration</h2>
   <%- include('partials/flash') %>
   <form method="GET" action="/alteration" style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
@@ -43,5 +43,4 @@
     <% if (!show_id && user && user.role === 'developer') { %><a href="/admin" class="btn btn-outline">&#8592; Dashboard</a><% } %>
   </div>
 </div>
-<img class="page-wm" src="https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?w=500&q=60" alt=""/>
 </body></html>

@@ -1,7 +1,7 @@
 <%- include('partials/head') %>
 <%- include('partials/nav') %>
 <div class="table-page">
-  <h1 class="page-title">OBSIDIAN</h1>
+  <a href="<%= user && user.role === 'developer' ? '/admin' : '/myshows' %>" style="text-decoration:none;color:inherit;display:block;"><h1 class="page-title">OBSIDIAN</h1></a>
   <h2 class="page-subtitle">Show Order</h2>
   <%- include('partials/flash') %>
   <div class="table-wrapper">
@@ -23,5 +23,4 @@
     <% if (show_id) { %><a href="/mymenudetail/<%= show_id %>" class="btn btn-outline">&#8592; Back</a><% } %>
   </div>
 </div>
-<img class="page-wm" src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=500&q=60" alt=""/>
 </body></html>

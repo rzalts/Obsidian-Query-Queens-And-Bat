@@ -39,7 +39,8 @@ router.get('/admin', requireLogin, async (req, res) => {
         (SELECT COUNT(*) FROM item)             AS total_items,
         (SELECT COUNT(*) FROM model)            AS total_models,
         (SELECT COUNT(*) FROM fitting)          AS total_fittings,
-        (SELECT COUNT(*) FROM alteration)       AS total_alterations
+        (SELECT COUNT(*) FROM alteration)       AS total_alterations,
+        (SELECT COUNT(*) FROM fit_location)     AS total_locations
     `);
 
     res.render('admin', { coordinators, stats: totals[0] });

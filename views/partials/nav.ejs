@@ -1,8 +1,10 @@
 <nav class="top-nav">
   <% if (user) { %>
-    <span style="font-size:13px;color:#555"><%= user.first_name %> <%= user.last_name %></span>
-    <form action="/logout" method="POST" style="display:inline">
-      <button type="submit">&#x2192; Log out</button>
-    </form>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span style="font-size:13px;color:#555"><%= user.first_name %> <%= user.last_name %></span>
+      <form action="/logout" method="POST" style="display:inline">
+        <button type="submit">&#x2192; Log out</button>
+      </form>
+    </div>
   <% } %>
 </nav>

@@ -46,8 +46,14 @@ router.get('/register', (req, res) => res.render('register'));
 router.post('/register', async (req, res) => {
   const { first_name, last_name, email, phone_number, password, role } = req.body;
   try {
+    // Server-side email validation — rejects anything that doesn't look like a real email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email.trim())) {
+      req.flash('error', 'Please enter a valid email address (e.g. name@example.com).');
+      return res.redirect('/register');
+    }
     const [existing] = await db.query(
-      'SELECT user_id FROM show_coordinator WHERE email = ?', [email]
+      'SELECT user_id FROM show_coordinator WHERE email = ?', [email.trim()]
     );
     if (existing.length) {
       req.flash('error', 'An account with that email already exists.');
