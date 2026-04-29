@@ -12,10 +12,10 @@ router.get('/model', requireLogin, async (req, res) => {
   try {
     let models = [];
     if (show_id) {
-      let sql = `SELECT DISTINCT m.* FROM model m JOIN fashion_look l ON l.model_id = m.model_id JOIN show_event se ON se.collection_id = l.collection_id WHERE se.show_id = ?`;
+      let sql = `SELECT * FROM model WHERE show_id = ?`;
       let p = [show_id];
-      if (search) { sql += ` AND (m.first_name LIKE ? OR m.last_name LIKE ? OR m.agency LIKE ?)`; p.push(`%${search}%`,`%${search}%`,`%${search}%`); }
-      sql += ` ORDER BY m.${sort_col}`;
+      if (search) { sql += ` AND (first_name LIKE ? OR last_name LIKE ? OR agency LIKE ?)`; p.push(`%${search}%`,`%${search}%`,`%${search}%`); }
+      sql += ` ORDER BY ${sort_col}`;
       [models] = await db.query(sql, p);
     } else if (req.session.user.role === 'developer') {
       let sql = `SELECT * FROM model WHERE 1=1`;
@@ -53,15 +53,15 @@ router.post('/modeladd', requireLogin, async (req, res) => {
   const { first_name, last_name, agency, email, phone_number, show_id } = req.body;
   try {
     await db.query(
-      'INSERT INTO model (first_name, last_name, agency, email, phone_number) VALUES (?, ?, ?, ?, ?)',
-      [first_name, last_name, agency, email, phone_number]
+      'INSERT INTO model (first_name, last_name, agency, email, phone_number, show_id) VALUES (?, ?, ?, ?, ?, ?)',
+      [first_name, last_name, agency, email, phone_number, show_id || null]
     );
     req.flash('success', 'Model added.');
     res.redirect(`/model${show_id ? `?show_id=${show_id}` : ''}`);
   } catch (err) {
     console.error(err);
     req.flash('error', 'Failed to add model.');
-    res.redirect('/modeladd');
+    res.redirect(`/modeladd${show_id ? `?show_id=${show_id}` : ''}`);
   }
 });
 
@@ -71,10 +71,7 @@ router.get('/modeldelete', requireLogin, async (req, res) => {
     let models = [];
     if (show_id) {
       [models] = await db.query(
-        `SELECT DISTINCT m.model_id, m.first_name, m.last_name
-         FROM model m JOIN fashion_look l ON l.model_id = m.model_id
-         JOIN show_event se ON se.collection_id = l.collection_id
-         WHERE se.show_id = ? ORDER BY m.model_id`, [show_id]);
+        `SELECT model_id, first_name, last_name FROM model WHERE show_id = ? ORDER BY model_id`, [show_id]);
     } else {
       [models] = await db.query(
         `SELECT model_id, first_name, last_name FROM model ORDER BY model_id`);

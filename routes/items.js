@@ -67,7 +67,9 @@ router.get('/itemadd', requireLogin, async (req, res) => {
     const [[row]] = await db.query('SELECT collection_id FROM show_event WHERE show_id=?', [show_id]);
     if (row) collection_id = row.collection_id;
   }
-  const [locations] = await db.query('SELECT location_id, location_name FROM fit_location ORDER BY location_name');
+  const [locations] = show_id
+    ? await db.query('SELECT location_id, location_name FROM fit_location WHERE show_id = ? ORDER BY location_name', [show_id])
+    : await db.query('SELECT location_id, location_name FROM fit_location ORDER BY location_name');
   res.render('itemadd', { show_id, collection_id, locations });
 });
 

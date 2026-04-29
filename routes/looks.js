@@ -52,7 +52,9 @@ router.get('/lookadd', requireLogin, async (req, res) => {
     const [[row]] = await db.query('SELECT collection_id FROM show_event WHERE show_id=?', [show_id]);
     if (row) collection_id = row.collection_id;
   }
-  const [models] = await db.query('SELECT model_id, first_name, last_name FROM model ORDER BY first_name');
+  const [models] = show_id
+    ? await db.query('SELECT model_id, first_name, last_name FROM model WHERE show_id = ? ORDER BY first_name', [show_id])
+    : await db.query('SELECT model_id, first_name, last_name FROM model ORDER BY first_name');
   res.render('lookadd', { show_id, collection_id, models });
 });
 

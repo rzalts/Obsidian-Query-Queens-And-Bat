@@ -12,10 +12,10 @@ router.get('/location', requireLogin, async (req, res) => {
     const allowed = ['location_id','location_name','location_address'];
     const sort_col = allowed.includes(sort) ? sort : 'location_id';
     if (show_id) {
-      let sql = `SELECT DISTINCT l.* FROM fit_location l JOIN item i ON i.location_id = l.location_id JOIN show_event se ON se.collection_id = i.collection_id WHERE se.show_id = ?`;
+      let sql = `SELECT * FROM fit_location WHERE show_id = ?`;
       let p = [show_id];
-      if (search) { sql += ` AND (l.location_name LIKE ? OR l.location_address LIKE ?)`; p.push(`%${search}%`,`%${search}%`); }
-      sql += ` ORDER BY l.${sort_col}`;
+      if (search) { sql += ` AND (location_name LIKE ? OR location_address LIKE ?)`; p.push(`%${search}%`,`%${search}%`); }
+      sql += ` ORDER BY ${sort_col}`;
       [locations] = await db.query(sql, p);
     } else if (req.session.user.role === 'developer') {
       let sql = `SELECT * FROM fit_location WHERE 1=1`;
@@ -34,7 +34,9 @@ router.get('/location', requireLogin, async (req, res) => {
 router.get('/location/export', requireLogin, async (req, res) => {
   const show_id = req.query.show_id;
   try {
-    const [rows] = await db.query(`SELECT * FROM fit_location ORDER BY location_id`);
+    const [rows] = show_id
+      ? await db.query(`SELECT * FROM fit_location WHERE show_id = ? ORDER BY location_id`, [show_id])
+      : await db.query(`SELECT * FROM fit_location ORDER BY location_id`);
     const headers = ['location_id','location_name','location_address'];
     const csv = [headers.join(','), ...rows.map(r => headers.map(h => `"${(r[h]??'').toString().replace(/"/g,'""')}"`).join(','))].join('\n');
     res.setHeader('Content-Type','text/csv');
@@ -51,8 +53,8 @@ router.post('/locationadd', requireLogin, async (req, res) => {
   const { location_name, location_address, show_id } = req.body;
   try {
     await db.query(
-      'INSERT INTO fit_location (location_name, location_address) VALUES (?, ?)',
-      [location_name, location_address]
+      'INSERT INTO fit_location (location_name, location_address, show_id) VALUES (?, ?, ?)',
+      [location_name, location_address, show_id || null]
     );
     req.flash('success', 'Location added.');
     res.redirect(`/location${show_id ? `?show_id=${show_id}` : ''}`);
@@ -69,10 +71,7 @@ router.get('/locationdelete', requireLogin, async (req, res) => {
     let locations = [];
     if (show_id) {
       [locations] = await db.query(
-        `SELECT DISTINCT l.location_id, l.location_name
-         FROM fit_location l JOIN item i ON i.location_id = l.location_id
-         JOIN show_event se ON se.collection_id = i.collection_id
-         WHERE se.show_id = ? ORDER BY l.location_id`, [show_id]);
+        `SELECT location_id, location_name FROM fit_location WHERE show_id = ? ORDER BY location_id`, [show_id]);
     } else {
       [locations] = await db.query(
         `SELECT location_id, location_name FROM fit_location ORDER BY location_id`);
