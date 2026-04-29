@@ -11,12 +11,19 @@ router.get('/model', requireLogin, async (req, res) => {
   const sort_col = allowed.includes(sort) ? sort : 'model_id';
   try {
     let models = [];
-    // Always show all models — a new model has no looks yet so show-filtering hides it
-    let sql = `SELECT * FROM model WHERE 1=1`;
-    let p = [];
-    if (search) { sql += ` AND (first_name LIKE ? OR last_name LIKE ? OR agency LIKE ?)`; p.push(`%${search}%`,`%${search}%`,`%${search}%`); }
-    sql += ` ORDER BY ${sort_col}`;
-    [models] = await db.query(sql, p);
+    if (show_id) {
+      let sql = `SELECT DISTINCT m.* FROM model m JOIN fashion_look l ON l.model_id = m.model_id JOIN show_event se ON se.collection_id = l.collection_id WHERE se.show_id = ?`;
+      let p = [show_id];
+      if (search) { sql += ` AND (m.first_name LIKE ? OR m.last_name LIKE ? OR m.agency LIKE ?)`; p.push(`%${search}%`,`%${search}%`,`%${search}%`); }
+      sql += ` ORDER BY m.${sort_col}`;
+      [models] = await db.query(sql, p);
+    } else if (req.session.user.role === 'developer') {
+      let sql = `SELECT * FROM model WHERE 1=1`;
+      let p = [];
+      if (search) { sql += ` AND (first_name LIKE ? OR last_name LIKE ? OR agency LIKE ?)`; p.push(`%${search}%`,`%${search}%`,`%${search}%`); }
+      sql += ` ORDER BY ${sort_col}`;
+      [models] = await db.query(sql, p);
+    }
     res.render('model', { models, show_id, search, sort: sort_col });
   } catch (err) {
     console.error(err);

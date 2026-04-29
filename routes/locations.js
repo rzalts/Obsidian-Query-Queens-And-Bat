@@ -11,12 +11,19 @@ router.get('/location', requireLogin, async (req, res) => {
     const sort = req.query.sort || 'location_id';
     const allowed = ['location_id','location_name','location_address'];
     const sort_col = allowed.includes(sort) ? sort : 'location_id';
-    // Always show all locations — locations are shared across shows
-    let sql = `SELECT * FROM fit_location WHERE 1=1`;
-    let p = [];
-    if (search) { sql += ` AND (location_name LIKE ? OR location_address LIKE ?)`; p.push(`%${search}%`,`%${search}%`); }
-    sql += ` ORDER BY ${sort_col}`;
-    [locations] = await db.query(sql, p);
+    if (show_id) {
+      let sql = `SELECT DISTINCT l.* FROM fit_location l JOIN item i ON i.location_id = l.location_id JOIN show_event se ON se.collection_id = i.collection_id WHERE se.show_id = ?`;
+      let p = [show_id];
+      if (search) { sql += ` AND (l.location_name LIKE ? OR l.location_address LIKE ?)`; p.push(`%${search}%`,`%${search}%`); }
+      sql += ` ORDER BY l.${sort_col}`;
+      [locations] = await db.query(sql, p);
+    } else if (req.session.user.role === 'developer') {
+      let sql = `SELECT * FROM fit_location WHERE 1=1`;
+      let p = [];
+      if (search) { sql += ` AND (location_name LIKE ? OR location_address LIKE ?)`; p.push(`%${search}%`,`%${search}%`); }
+      sql += ` ORDER BY ${sort_col}`;
+      [locations] = await db.query(sql, p);
+    }
     res.render('location', { locations, show_id, search, sort: sort_col });
   } catch (err) {
     console.error(err);
@@ -60,8 +67,16 @@ router.get('/locationdelete', requireLogin, async (req, res) => {
   const show_id = req.query.show_id;
   try {
     let locations = [];
-    [locations] = await db.query(
-      `SELECT location_id, location_name FROM fit_location ORDER BY location_id`);
+    if (show_id) {
+      [locations] = await db.query(
+        `SELECT DISTINCT l.location_id, l.location_name
+         FROM fit_location l JOIN item i ON i.location_id = l.location_id
+         JOIN show_event se ON se.collection_id = i.collection_id
+         WHERE se.show_id = ? ORDER BY l.location_id`, [show_id]);
+    } else {
+      [locations] = await db.query(
+        `SELECT location_id, location_name FROM fit_location ORDER BY location_id`);
+    }
     res.render('locationdelete', { show_id, locations });
   } catch (err) {
     console.error(err);
