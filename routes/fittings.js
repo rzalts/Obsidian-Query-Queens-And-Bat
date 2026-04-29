@@ -118,9 +118,20 @@ router.post('/fittingdelete', requireLogin, async (req, res) => {
   }
 });
 
-router.get('/fittingstatus', requireLogin, (req, res) =>
-  res.render('fittingstatus', { show_id: req.query.show_id })
-);
+router.get('/fittingstatus', requireLogin, async (req, res) => {
+  const show_id = req.query.show_id;
+  let fittings = [];
+  if (show_id) {
+    [fittings] = await db.query(
+      `SELECT f.fitting_id, f.fitting_date, f.fitting_status
+       FROM fitting f JOIN fashion_look l ON l.look_id = f.look_id
+       JOIN show_event se ON se.collection_id = l.collection_id
+       WHERE se.show_id = ? ORDER BY f.fitting_id`, [show_id]);
+  } else {
+    [fittings] = await db.query('SELECT fitting_id, fitting_date, fitting_status FROM fitting ORDER BY fitting_id');
+  }
+  res.render('fittingstatus', { show_id, fittings });
+});
 
 router.post('/fittingstatus', requireLogin, async (req, res) => {
   const { fitting_id, new_status, show_id } = req.body;
@@ -134,7 +145,7 @@ router.post('/fittingstatus', requireLogin, async (req, res) => {
   } catch (err) {
     console.error(err);
     req.flash('error', 'Failed to update fitting status.');
-    res.redirect('/fittingstatus');
+    res.redirect(`/fittingstatus${show_id ? `?show_id=${show_id}` : ''}`);
   }
 });
 

@@ -115,9 +115,20 @@ router.post('/alterationdelete', requireLogin, async (req, res) => {
   }
 });
 
-router.get('/alterationstatus', requireLogin, (req, res) =>
-  res.render('alterationstatus', { show_id: req.query.show_id })
-);
+router.get('/alterationstatus', requireLogin, async (req, res) => {
+  const show_id = req.query.show_id;
+  let alterations = [];
+  if (show_id) {
+    [alterations] = await db.query(
+      `SELECT a.alteration_id, a.alteration_status, a.date_needed_by
+       FROM alteration a JOIN item i ON i.item_id = a.item_id
+       JOIN show_event se ON se.collection_id = i.collection_id
+       WHERE se.show_id = ? ORDER BY a.alteration_id`, [show_id]);
+  } else {
+    [alterations] = await db.query('SELECT alteration_id, alteration_status, date_needed_by FROM alteration ORDER BY alteration_id');
+  }
+  res.render('alterationstatus', { show_id, alterations });
+});
 
 router.post('/alterationstatus', requireLogin, async (req, res) => {
   const { alteration_id, new_status, show_id } = req.body;
@@ -131,7 +142,7 @@ router.post('/alterationstatus', requireLogin, async (req, res) => {
   } catch (err) {
     console.error(err);
     req.flash('error', 'Failed to update status.');
-    res.redirect('/alterationstatus');
+    res.redirect(`/alterationstatus${show_id ? `?show_id=${show_id}` : ''}`);
   }
 });
 

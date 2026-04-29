@@ -2,14 +2,29 @@
 <%- include('partials/nav') %>
 <div class="shows-page">
   <a href="<%= user && user.role === 'developer' ? '/admin' : '/myshows' %>" style="text-decoration:none;color:inherit;display:block;"><h1 class="page-title">OBSIDIAN</h1></a>
-  <h2 class="page-subtitle">Fitting</h2>
+  <h2 class="page-subtitle">Change Fitting Status</h2>
   <%- include('partials/flash') %>
   <form class="form-container" action="/fittingstatus" method="POST">
     <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
-    <div class="form-group"><label>Fitting ID</label><input type="number" name="fitting_id" placeholder="Enter Fitting ID" required/></div>
-    <div class="form-group"><label>New Status</label><input type="text" name="new_status" placeholder="e.g. Finished / Not Finished" required/></div>
+    <div class="form-group">
+      <label>Fitting</label>
+      <select name="fitting_id" required style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="" disabled selected>Choose a fitting…</option>
+        <% fittings.forEach(f => { %>
+          <option value="<%= f.fitting_id %>">#<%= f.fitting_id %> — <%= f.fitting_date ? new Date(f.fitting_date).toLocaleDateString() : 'No date' %> (<%= f.fitting_status %>)</option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>New Status</label>
+      <select name="new_status" required style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="" disabled selected>Select Status</option>
+        <option value="Scheduled">Scheduled</option>
+        <option value="Completed">Completed</option>
+        <option value="Cancelled">Cancelled</option>
+      </select>
+    </div>
     <button type="submit" class="btn btn-dark" style="width:100%">Change Status</button>
   </form>
 </div>
-<img class="page-wm page-wm-left" src="https://images.unsplash.com/photo-1558618047-3c8c76ca7d12?w=500&q=60" alt=""/>
 </body></html>
