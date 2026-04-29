@@ -2,17 +2,39 @@
 <%- include('partials/nav') %>
 <div class="shows-page">
   <a href="<%= user && user.role === 'developer' ? '/admin' : '/myshows' %>" style="text-decoration:none;color:inherit;display:block;"><h1 class="page-title">OBSIDIAN</h1></a>
-  <h2 class="page-subtitle">Collection</h2>
+  <h2 class="page-subtitle">Add Collection</h2>
   <%- include('partials/flash') %>
   <form class="form-container" action="/collectionadd" method="POST">
     <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
     <div class="form-group"><label>Collection Name</label><input type="text" name="collection_name" placeholder="Enter Collection Name" required/></div>
-    <div class="form-group"><label>Brand</label><input type="text" name="brand" placeholder="Enter Brand Name" required/></div>
-    <div class="form-group"><label>Season</label><input type="text" name="season" placeholder="Enter Season"/></div>
-    <div class="form-group"><label>Year</label><input type="number" name="collection_year" placeholder="Enter Year"/></div>
-    <div class="form-group"><label>Status</label><input type="text" name="collection_status" placeholder="e.g. Finished / Not Finished"/></div>
+    <div class="form-group"><label>Brand</label><input type="text" name="brand" placeholder="Enter Brand Name"/></div>
+    <div class="form-group">
+      <label>Season</label>
+      <select name="season" style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="" disabled selected>Select Season</option>
+        <option value="Spring">Spring</option>
+        <option value="Summer">Summer</option>
+        <option value="Fall">Fall</option>
+        <option value="Winter">Winter</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Year</label>
+      <select name="collection_year" style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="" disabled selected>Select Year</option>
+        <% for(let y=1990;y<=2030;y++){ %><option value="<%= y %>"><%= y %></option><% } %>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select name="collection_status" required style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="" disabled selected>Select Status</option>
+        <option value="Pending">Pending</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Finished">Finished</option>
+      </select>
+    </div>
     <button type="submit" class="btn btn-dark" style="width:100%">+ Add Collection</button>
   </form>
 </div>
-<img class="page-wm" src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=500&q=60" alt=""/>
 </body></html>

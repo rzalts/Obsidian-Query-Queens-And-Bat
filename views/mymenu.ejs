@@ -2,22 +2,42 @@
 <%- include('partials/nav') %>
 <div class="shows-page">
   <a href="<%= user && user.role === 'developer' ? '/admin' : '/myshows' %>" style="text-decoration:none;color:inherit;display:block;"><h1 class="page-title">OBSIDIAN</h1></a>
-  <h2 class="page-subtitle"><%= show.show_name %></h2>
   <div class="show-single">
-    <% if (show.logo_path) { %>
-      <img src="<%= show.logo_path %>" alt="<%= show.show_name %>" class="show-single-logo"/>
-    <% } else { %>
-      <div class="show-logo-placeholder" style="width:200px;height:200px">No Logo</div>
-    <% } %>
+    <div class="show-name-box" style="width:220px;height:130px;font-size:20px;background:<%= show.card_color || '#111111' %>;color:<%= (show.card_color||'#111111') === '#F5F0E8' ? '#333' : '#fff' %>"><%= show.show_name %></div>
     <div class="show-single-info">
-      <strong><%= show.venue %></strong><br/>
-      <%= show.address %><br/>
-      <%= show.show_date ? new Date(show.show_date).toLocaleDateString() : '' %><br/>
+      <div style="margin-bottom:6px;">
+        <span style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.8px;">Show Name</span><br/>
+        <span style="font-size:18px;font-weight:700;"><%= show.show_name %></span>
+      </div>
+      <% if (show.venue) { %>
+      <div style="margin-bottom:6px;">
+        <span style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.8px;">Venue</span><br/>
+        <span style="font-size:16px;font-weight:600;"><%= show.venue %></span>
+      </div>
+      <% } %>
+      <% if (show.show_address) { %>
+      <div style="margin-bottom:6px;">
+        <span style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.8px;">Address</span><br/>
+        <span style="font-size:14px;"><%= show.show_address %></span>
+      </div>
+      <% } %>
+      <% if (show.show_date) { %>
+      <div style="margin-bottom:6px;">
+        <span style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.8px;">Date</span><br/>
+        <span style="font-size:14px;"><%= new Date(show.show_date).toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' }) %></span>
+      </div>
+      <% } %>
       <% if (show.start_time && show.end_time) { %>
-        <%= show.start_time %> - <%= show.end_time %>
+      <div>
+        <span style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.8px;">Time</span><br/>
+        <span style="font-size:14px;"><%= show.start_time %> – <%= show.end_time %></span>
+      </div>
       <% } %>
     </div>
-    <a href="/mymenudetail/<%= show.show_id %>" class="btn btn-dark">More Details</a>
+    <div style="display:flex;gap:10px;">
+      <a href="/mymenudetail/<%= show.show_id %>" class="btn btn-dark">More Details</a>
+      <a href="/myshowsedit/<%= show.show_id %>" class="btn btn-outline">&#9998; Edit Show</a>
+    </div>
   </div>
 </div>
 </body></html>

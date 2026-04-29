@@ -14,5 +14,8 @@ ALTER TABLE show_event ADD COLUMN IF NOT EXISTS show_name VARCHAR(255) DEFAULT N
 -- Hash existing plaintext passwords (run once, then delete this block)
 -- UPDATE show_coordinator SET password = '$2b$10$PLACEHOLDER_RUN_register_to_create_accounts' WHERE password NOT LIKE '$2b$%';
 
+-- Add card_color column so each show card can have a custom color
+ALTER TABLE show_event ADD COLUMN IF NOT EXISTS card_color VARCHAR(20) DEFAULT '#111111';
+
 -- Verify tables exist
 SHOW TABLES;

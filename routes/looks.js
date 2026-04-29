@@ -65,9 +65,25 @@ router.post('/lookadd', requireLogin, async (req, res) => {
   }
 });
 
-router.get('/lookdelete', requireLogin, (req, res) =>
-  res.render('lookdelete', { show_id: req.query.show_id })
-);
+router.get('/lookdelete', requireLogin, async (req, res) => {
+  const show_id = req.query.show_id;
+  try {
+    let looks = [];
+    if (show_id) {
+      [looks] = await db.query(
+        `SELECT l.look_id, l.look_category, l.look_description
+         FROM fashion_look l JOIN show_event se ON se.collection_id = l.collection_id
+         WHERE se.show_id = ? ORDER BY l.look_id`, [show_id]);
+    } else {
+      [looks] = await db.query(
+        `SELECT look_id, look_category, look_description FROM fashion_look ORDER BY look_id`);
+    }
+    res.render('lookdelete', { show_id, looks });
+  } catch (err) {
+    console.error(err);
+    res.render('lookdelete', { show_id, looks: [] });
+  }
+});
 
 router.post('/lookdelete', requireLogin, async (req, res) => {
   const { look_id, show_id } = req.body;

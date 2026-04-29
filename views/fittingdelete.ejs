@@ -2,12 +2,24 @@
 <%- include('partials/nav') %>
 <div class="shows-page">
   <a href="<%= user && user.role === 'developer' ? '/admin' : '/myshows' %>" style="text-decoration:none;color:inherit;display:block;"><h1 class="page-title">OBSIDIAN</h1></a>
-  <h2 class="page-subtitle">Fitting</h2>
+  <h2 class="page-subtitle">Delete Fitting</h2>
   <%- include('partials/flash') %>
   <form class="form-container" action="/fittingdelete" method="POST">
     <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
-    <div class="form-group"><label>Fitting ID</label><input type="number" name="fitting_id" placeholder="Enter Fitting ID" required/></div>
-    <button type="submit" class="btn btn-dark" style="width:100%">- Delete Fitting</button>
+    <div class="form-group">
+      <label>Select Fitting to Delete</label>
+      <select name="fitting_id" required style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="" disabled selected>Choose a fitting…</option>
+        <% fittings.forEach(f => { %>
+          <option value="<%= f.fitting_id %>">#<%= f.fitting_id %> — <%= f.fitting_date ? new Date(f.fitting_date).toLocaleDateString() : 'No date' %> · <%= f.fitting_status || '' %></option>
+        <% }) %>
+      </select>
+    </div>
+    <% if (!fittings.length) { %>
+      <p style="text-align:center;color:#888;font-size:14px;">No fittings available to delete.</p>
+    <% } else { %>
+      <button type="submit" class="btn btn-dark" style="width:100%;background:#c0392b;">- Delete Fitting</button>
+    <% } %>
   </form>
 </div>
 </body></html>

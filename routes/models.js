@@ -65,9 +65,26 @@ router.post('/modeladd', requireLogin, async (req, res) => {
   }
 });
 
-router.get('/modeldelete', requireLogin, (req, res) =>
-  res.render('modeldelete', { show_id: req.query.show_id })
-);
+router.get('/modeldelete', requireLogin, async (req, res) => {
+  const show_id = req.query.show_id;
+  try {
+    let models = [];
+    if (show_id) {
+      [models] = await db.query(
+        `SELECT DISTINCT m.model_id, m.first_name, m.last_name
+         FROM model m JOIN fashion_look l ON l.model_id = m.model_id
+         JOIN show_event se ON se.collection_id = l.collection_id
+         WHERE se.show_id = ? ORDER BY m.model_id`, [show_id]);
+    } else {
+      [models] = await db.query(
+        `SELECT model_id, first_name, last_name FROM model ORDER BY model_id`);
+    }
+    res.render('modeldelete', { show_id, models });
+  } catch (err) {
+    console.error(err);
+    res.render('modeldelete', { show_id, models: [] });
+  }
+});
 
 router.post('/modeldelete', requireLogin, async (req, res) => {
   const { model_id, show_id } = req.body;

@@ -1,5 +1,6 @@
 <nav class="top-nav">
   <% if (user) { %>
+    <a href="/myshows" style="font-size:13px;font-weight:600;color:#111;text-decoration:none;">&#8962; My Shows</a>
     <div style="display:flex;align-items:center;gap:12px;">
       <span style="font-size:13px;color:#555"><%= user.first_name %> <%= user.last_name %></span>
       <form action="/logout" method="POST" style="display:inline">

@@ -2,17 +2,61 @@
 <%- include('partials/nav') %>
 <div class="shows-page">
   <a href="<%= user && user.role === 'developer' ? '/admin' : '/myshows' %>" style="text-decoration:none;color:inherit;display:block;"><h1 class="page-title">OBSIDIAN</h1></a>
-  <h2 class="page-subtitle">Alteration</h2>
+  <h2 class="page-subtitle">Add Alteration</h2>
   <%- include('partials/flash') %>
-  <form class="form-container" action="/alterationadd" method="POST">
+  <form class="form-container" action="/alterationadd" method="POST" id="alterationForm">
     <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
     <div class="form-group"><label>Item ID</label><input type="number" name="item_id" placeholder="Enter Item ID" required/></div>
     <div class="form-group"><label>Fitting ID</label><input type="number" name="fitting_id" placeholder="Enter Fitting ID" required/></div>
     <div class="form-group"><label>Alteration Type</label><input type="text" name="alteration_type" placeholder="Enter Alteration Type" required/></div>
-    <div class="form-group"><label>Date Needed By</label><input type="date" name="date_needed_by"/></div>
-    <div class="form-group"><label>Status</label><input type="text" name="alteration_status" placeholder="e.g. Pending / Completed"/></div>
+
+    <div class="form-group">
+      <label>Date Needed By</label>
+      <div style="display:flex;gap:8px;">
+        <select id="alt_month" style="flex:2;padding:12px 10px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+          <option value="" disabled selected>Month</option>
+          <% ['January','February','March','April','May','June','July','August','September','October','November','December'].forEach((mn,i) => { const v=String(i+1).padStart(2,'0'); %>
+            <option value="<%= v %>"><%= mn %></option>
+          <% }); %>
+        </select>
+        <select id="alt_day" style="flex:1;padding:12px 10px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+          <option value="" disabled selected>Day</option>
+          <% for(let d=1;d<=31;d++){ %><option value="<%= String(d).padStart(2,'0') %>"><%= d %></option><% } %>
+        </select>
+        <select id="alt_year" style="flex:1;padding:12px 10px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+          <option value="" disabled selected>Year</option>
+        </select>
+      </div>
+      <input type="hidden" name="date_needed_by" id="date_needed_by"/>
+    </div>
+
+    <div class="form-group">
+      <label>Status</label>
+      <select name="alteration_status" style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="" disabled selected>Select Status</option>
+        <option value="Pending">Pending</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+      </select>
+    </div>
     <button type="submit" class="btn btn-dark" style="width:100%">+ Add New Alteration</button>
   </form>
 </div>
-<img class="page-wm" src="https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?w=500&q=60" alt=""/>
+
+<script>
+  const today = new Date();
+  const yearSel = document.getElementById('alt_year');
+  for (let y = today.getFullYear(); y <= today.getFullYear() + 6; y++) {
+    const opt = document.createElement('option');
+    opt.value = y; opt.textContent = y;
+    yearSel.appendChild(opt);
+  }
+
+  document.getElementById('alterationForm').addEventListener('submit', function() {
+    const m = document.getElementById('alt_month').value;
+    const d = document.getElementById('alt_day').value;
+    const y = document.getElementById('alt_year').value;
+    if (m && d && y) document.getElementById('date_needed_by').value = y + '-' + m + '-' + d;
+  });
+</script>
 </body></html>

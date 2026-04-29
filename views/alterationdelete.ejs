@@ -2,12 +2,24 @@
 <%- include('partials/nav') %>
 <div class="shows-page">
   <a href="<%= user && user.role === 'developer' ? '/admin' : '/myshows' %>" style="text-decoration:none;color:inherit;display:block;"><h1 class="page-title">OBSIDIAN</h1></a>
-  <h2 class="page-subtitle">Alteration</h2>
+  <h2 class="page-subtitle">Delete Alteration</h2>
   <%- include('partials/flash') %>
   <form class="form-container" action="/alterationdelete" method="POST">
     <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
-    <div class="form-group"><label>Alteration ID</label><input type="number" name="alteration_id" placeholder="Enter Alteration ID" required/></div>
-    <button type="submit" class="btn btn-dark" style="width:100%">- Delete an Alteration</button>
+    <div class="form-group">
+      <label>Select Alteration to Delete</label>
+      <select name="alteration_id" required style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="" disabled selected>Choose an alteration…</option>
+        <% alterations.forEach(a => { %>
+          <option value="<%= a.alteration_id %>">#<%= a.alteration_id %> — <%= a.alteration_type || 'No type' %> · <%= a.alteration_status || '' %></option>
+        <% }) %>
+      </select>
+    </div>
+    <% if (!alterations.length) { %>
+      <p style="text-align:center;color:#888;font-size:14px;">No alterations available to delete.</p>
+    <% } else { %>
+      <button type="submit" class="btn btn-dark" style="width:100%;background:#c0392b;">- Delete Alteration</button>
+    <% } %>
   </form>
 </div>
 </body></html>

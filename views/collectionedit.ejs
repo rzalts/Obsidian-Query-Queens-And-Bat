@@ -1,0 +1,55 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="shows-page">
+  <a href="<%= user && user.role === 'developer' ? '/admin' : '/myshows' %>" style="text-decoration:none;color:inherit;display:block;"><h1 class="page-title">OBSIDIAN</h1></a>
+  <h2 class="page-subtitle">Edit Collection</h2>
+  <%- include('partials/flash') %>
+  <% if (collection) { %>
+  <form class="form-container" action="/collectionedit" method="POST">
+    <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
+    <input type="hidden" name="collection_id" value="<%= collection.collection_id %>"/>
+    <div class="form-group">
+      <label>Collection Name</label>
+      <input type="text" name="collection_name" value="<%= collection.collection_name %>" required/>
+    </div>
+    <div class="form-group">
+      <label>Brand</label>
+      <input type="text" name="brand" value="<%= collection.brand || '' %>" placeholder="Enter Brand"/>
+    </div>
+    <div class="form-group">
+      <label>Season</label>
+      <select name="season" style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="">— None —</option>
+        <% ['Spring','Summer','Fall','Winter'].forEach(s => { %>
+          <option value="<%= s %>" <%= collection.season===s?'selected':'' %>><%= s %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Year</label>
+      <select name="collection_year" style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="">— None —</option>
+        <% for(let y=1990;y<=2030;y++){ %>
+          <option value="<%= y %>" <%= Number(collection.collection_year)===y?'selected':'' %>><%= y %></option>
+        <% } %>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select name="collection_status" required style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="" disabled>Select Status</option>
+        <% ['Pending','In Progress','Finished'].forEach(st => { %>
+          <option value="<%= st %>" <%= collection.collection_status===st?'selected':'' %>><%= st %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px;">
+      <button type="submit" class="btn btn-dark" style="flex:1;">Save Changes</button>
+      <a href="/collection<%= show_id ? `?show_id=${show_id}` : '' %>" class="btn btn-outline" style="flex:1;text-align:center;">Cancel</a>
+    </div>
+  </form>
+  <% } else { %>
+    <p style="text-align:center;color:#888;font-size:14px;">No collection found for this show.</p>
+  <% } %>
+</div>
+</body></html>

@@ -11,19 +11,12 @@ router.get('/location', requireLogin, async (req, res) => {
     const sort = req.query.sort || 'location_id';
     const allowed = ['location_id','location_name','location_address'];
     const sort_col = allowed.includes(sort) ? sort : 'location_id';
-    if (show_id) {
-      let sql = `SELECT DISTINCT l.* FROM fit_location l JOIN item i ON i.location_id = l.location_id JOIN show_event se ON se.collection_id = i.collection_id WHERE se.show_id = ?`;
-      let p = [show_id];
-      if (search) { sql += ` AND (l.location_name LIKE ? OR l.location_address LIKE ?)`; p.push(`%${search}%`,`%${search}%`); }
-      sql += ` ORDER BY l.${sort_col}`;
-      [locations] = await db.query(sql, p);
-    } else if (req.session.user.role === 'developer') {
-      let sql = `SELECT * FROM fit_location WHERE 1=1`;
-      let p = [];
-      if (search) { sql += ` AND (location_name LIKE ? OR location_address LIKE ?)`; p.push(`%${search}%`,`%${search}%`); }
-      sql += ` ORDER BY ${sort_col}`;
-      [locations] = await db.query(sql, p);
-    }
+    // Always show all locations — locations are shared across shows
+    let sql = `SELECT * FROM fit_location WHERE 1=1`;
+    let p = [];
+    if (search) { sql += ` AND (location_name LIKE ? OR location_address LIKE ?)`; p.push(`%${search}%`,`%${search}%`); }
+    sql += ` ORDER BY ${sort_col}`;
+    [locations] = await db.query(sql, p);
     res.render('location', { locations, show_id, search, sort: sort_col });
   } catch (err) {
     console.error(err);
@@ -34,9 +27,7 @@ router.get('/location', requireLogin, async (req, res) => {
 router.get('/location/export', requireLogin, async (req, res) => {
   const show_id = req.query.show_id;
   try {
-    const [rows] = show_id
-      ? await db.query(`SELECT DISTINCT l.* FROM fit_location l JOIN item i ON i.location_id = l.location_id JOIN show_event se ON se.collection_id = i.collection_id WHERE se.show_id = ? ORDER BY l.location_id`, [show_id])
-      : await db.query(`SELECT * FROM fit_location ORDER BY location_id`);
+    const [rows] = await db.query(`SELECT * FROM fit_location ORDER BY location_id`);
     const headers = ['location_id','location_name','location_address'];
     const csv = [headers.join(','), ...rows.map(r => headers.map(h => `"${(r[h]??'').toString().replace(/"/g,'""')}"`).join(','))].join('\n');
     res.setHeader('Content-Type','text/csv');
@@ -65,20 +56,37 @@ router.post('/locationadd', requireLogin, async (req, res) => {
   }
 });
 
-router.get('/locationdelete', requireLogin, (req, res) =>
-  res.render('locationdelete', { show_id: req.query.show_id })
-);
+router.get('/locationdelete', requireLogin, async (req, res) => {
+  const show_id = req.query.show_id;
+  try {
+    let locations = [];
+    [locations] = await db.query(
+      `SELECT location_id, location_name FROM fit_location ORDER BY location_id`);
+    res.render('locationdelete', { show_id, locations });
+  } catch (err) {
+    console.error(err);
+    res.render('locationdelete', { show_id, locations: [] });
+  }
+});
 
 router.post('/locationdelete', requireLogin, async (req, res) => {
   const { location_id, show_id } = req.body;
   try {
+    // Check if any items are still using this location
+    const [rows] = await db.query('SELECT COUNT(*) AS cnt FROM item WHERE location_id = ?', [location_id]);
+    const cnt = Number(rows[0].cnt);
+    console.log('[locationdelete] location_id:', location_id, 'linked items:', cnt);
+    if (cnt > 0) {
+      req.flash('error', `Cannot delete — ${cnt} item(s) are still assigned to this location.`);
+      return res.redirect(`/locationdelete${show_id ? `?show_id=${show_id}` : ''}`);
+    }
     await db.query('DELETE FROM fit_location WHERE location_id = ?', [location_id]);
     req.flash('success', 'Location deleted.');
     res.redirect(`/location${show_id ? `?show_id=${show_id}` : ''}`);
   } catch (err) {
     console.error(err);
-    req.flash('error', 'Failed to delete location.');
-    res.redirect('/locationdelete');
+    req.flash('error', 'Failed to delete due to location tied item(s)');
+    res.redirect(`/locationdelete${show_id ? `?show_id=${show_id}` : ''}`);
   }
 });
 

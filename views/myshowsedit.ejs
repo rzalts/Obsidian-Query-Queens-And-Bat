@@ -1,0 +1,152 @@
+<%- include('partials/head') %>
+<%- include('partials/nav') %>
+<div class="shows-page">
+  <a href="<%= user && user.role === 'developer' ? '/admin' : '/myshows' %>" style="text-decoration:none;color:inherit;display:block;"><h1 class="page-title">OBSIDIAN</h1></a>
+  <h2 class="page-subtitle">Edit Show</h2>
+  <%- include('partials/flash') %>
+  <form class="form-container" action="/myshowsedit/<%= show.show_id %>" method="POST" id="editForm">
+
+    <p style="font-size:12px;color:#888;margin-bottom:16px;letter-spacing:.4px;">SHOW DETAILS</p>
+
+    <div class="form-group">
+      <label>Show Name</label>
+      <input type="text" name="show_name" value="<%= show.show_name %>" required/>
+    </div>
+
+    <!-- Date dropdowns pre-filled -->
+    <div class="form-group">
+      <label>Show Date</label>
+      <div style="display:flex;gap:8px;">
+        <select id="sel_month" style="flex:2;padding:12px 10px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+          <option value="" disabled>Month</option>
+          <% const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+             const curM = show.show_date ? new Date(show.show_date).getUTCMonth()+1 : 0;
+             months.forEach((mn, i) => { const v=String(i+1).padStart(2,'0'); %>
+            <option value="<%= v %>" <%= curM===i+1?'selected':'' %>><%= mn %></option>
+          <% }); %>
+        </select>
+        <select id="sel_day" style="flex:1;padding:12px 10px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+          <option value="" disabled>Day</option>
+          <% const curD = show.show_date ? new Date(show.show_date).getUTCDate() : 0;
+             for(let d=1;d<=31;d++){ %>
+            <option value="<%= String(d).padStart(2,'0') %>" <%= curD===d?'selected':'' %>><%= d %></option>
+          <% } %>
+        </select>
+        <select id="sel_year" style="flex:1;padding:12px 10px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+          <option value="" disabled>Year</option>
+          <% const curY = show.show_date ? new Date(show.show_date).getUTCFullYear() : 0;
+             const nowY = new Date().getFullYear();
+             for(let y=nowY;y<=nowY+6;y++){ %>
+            <option value="<%= y %>" <%= curY===y?'selected':'' %>><%= y %></option>
+          <% } %>
+        </select>
+      </div>
+      <input type="hidden" name="show_date" id="show_date" value="<%= show.show_date ? show.show_date.toISOString().split('T')[0] : '' %>"/>
+    </div>
+
+    <div class="form-group">
+      <label>Venue</label>
+      <input type="text" name="venue" value="<%= show.venue || '' %>" placeholder="Enter Venue" required/>
+    </div>
+    <div class="form-group">
+      <label>Address</label>
+      <input type="text" name="show_address" value="<%= show.show_address || '' %>" placeholder="Enter Address"/>
+    </div>
+
+    <!-- Time dropdowns pre-filled -->
+    <div class="form-group">
+      <label>Start Time</label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <select id="start_hour" style="flex:1;padding:12px 10px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+          <option value="" disabled>Hour</option>
+          <% const sH = show.start_time ? String(show.start_time).substring(0,2) : '';
+             for(let h=0;h<24;h++){ const hh=String(h).padStart(2,'0'); %>
+            <option value="<%= hh %>" <%= sH===hh?'selected':'' %>><%= hh %></option>
+          <% } %>
+        </select>
+        <span style="font-size:18px;font-weight:600;">:</span>
+        <select id="start_min" style="flex:1;padding:12px 10px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+          <option value="" disabled>Min</option>
+          <% const sM = show.start_time ? String(show.start_time).substring(3,5) : '';
+             ['00','15','30','45'].forEach(mm => { %>
+            <option value="<%= mm %>" <%= sM===mm?'selected':'' %>><%= mm %></option>
+          <% }); %>
+        </select>
+      </div>
+      <input type="hidden" name="start_time" id="start_time"/>
+    </div>
+
+    <div class="form-group">
+      <label>End Time</label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <select id="end_hour" style="flex:1;padding:12px 10px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+          <option value="" disabled>Hour</option>
+          <% const eH = show.end_time ? String(show.end_time).substring(0,2) : '';
+             for(let h=0;h<24;h++){ const hh=String(h).padStart(2,'0'); %>
+            <option value="<%= hh %>" <%= eH===hh?'selected':'' %>><%= hh %></option>
+          <% } %>
+        </select>
+        <span style="font-size:18px;font-weight:600;">:</span>
+        <select id="end_min" style="flex:1;padding:12px 10px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+          <option value="" disabled>Min</option>
+          <% const eM = show.end_time ? String(show.end_time).substring(3,5) : '';
+             ['00','15','30','45'].forEach(mm => { %>
+            <option value="<%= mm %>" <%= eM===mm?'selected':'' %>><%= mm %></option>
+          <% }); %>
+        </select>
+      </div>
+      <input type="hidden" name="end_time" id="end_time"/>
+    </div>
+
+    <!-- Card color -->
+    <div class="form-group">
+      <label>Card Color</label>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <% [['#111111','Black','#fff'],['#1B2A4A','Navy','#fff'],['#6B6560','Stone','#fff'],['#F5F0E8','Cream','#333']].forEach(([val,name,txt]) => { %>
+          <label class="color-choice">
+            <input type="radio" name="card_color" value="<%= val %>" <%= (show.card_color||'#111111')===val?'checked':'' %>/>
+            <span class="color-swatch" style="background:<%= val %>;<%= val==='#F5F0E8'?'border:1px solid #ddd;':'' %>">
+              <span style="color:<%= txt %>"><%= name %></span>
+            </span>
+          </label>
+        <% }); %>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:8px;">
+      <button type="submit" class="btn btn-dark" style="flex:1;">Save Changes</button>
+      <a href="/mymenu/<%= show.show_id %>" class="btn btn-outline" style="flex:1;text-align:center;">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.getElementById('editForm').addEventListener('submit', function(e) {
+    const m = document.getElementById('sel_month').value;
+    const d = document.getElementById('sel_day').value;
+    const y = document.getElementById('sel_year').value;
+
+    if (!m || !d || !y) { e.preventDefault(); alert('Please select a full show date.'); return; }
+
+    // Validate date is today or later
+    const today = new Date();
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const chosen = new Date(y, m - 1, d);
+    if (chosen < todayStart) {
+      e.preventDefault();
+      alert('Show date must be today or a future date.');
+      return;
+    }
+
+    document.getElementById('show_date').value = y + '-' + m + '-' + d;
+
+    const sh = document.getElementById('start_hour').value;
+    const sm = document.getElementById('start_min').value;
+    if (sh && sm) document.getElementById('start_time').value = sh + ':' + sm;
+
+    const eh = document.getElementById('end_hour').value;
+    const em = document.getElementById('end_min').value;
+    if (eh && em) document.getElementById('end_time').value = eh + ':' + em;
+  });
+</script>
+</body></html>

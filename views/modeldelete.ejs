@@ -2,12 +2,24 @@
 <%- include('partials/nav') %>
 <div class="shows-page">
   <a href="<%= user && user.role === 'developer' ? '/admin' : '/myshows' %>" style="text-decoration:none;color:inherit;display:block;"><h1 class="page-title">OBSIDIAN</h1></a>
-  <h2 class="page-subtitle">Model</h2>
+  <h2 class="page-subtitle">Delete Model</h2>
   <%- include('partials/flash') %>
   <form class="form-container" action="/modeldelete" method="POST">
     <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
-    <div class="form-group"><label>Model ID</label><input type="number" name="model_id" placeholder="Enter Model ID" required/></div>
-    <button type="submit" class="btn btn-dark" style="width:100%">- Delete Model</button>
+    <div class="form-group">
+      <label>Select Model to Delete</label>
+      <select name="model_id" required style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="" disabled selected>Choose a model…</option>
+        <% models.forEach(m => { %>
+          <option value="<%= m.model_id %>">#<%= m.model_id %> — <%= m.first_name %> <%= m.last_name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <% if (!models.length) { %>
+      <p style="text-align:center;color:#888;font-size:14px;">No models available to delete.</p>
+    <% } else { %>
+      <button type="submit" class="btn btn-dark" style="width:100%;background:#c0392b;">- Delete Model</button>
+    <% } %>
   </form>
 </div>
 </body></html>

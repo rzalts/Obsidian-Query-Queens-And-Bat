@@ -58,6 +58,50 @@
       </a>
     </div>
 
+    <!-- Per-show breakdown table -->
+    <h3 class="section-heading">SHOWS BREAKDOWN</h3>
+    <div class="table-wrapper" style="margin-bottom:36px;">
+      <table>
+        <thead>
+          <tr>
+            <th>Show</th>
+            <th>Date</th>
+            <th>Venue</th>
+            <th>Coordinator</th>
+            <th>Collection</th>
+            <th>Looks</th>
+            <th>Items</th>
+            <th>Models</th>
+            <th>Fittings</th>
+            <th>Alterations</th>
+            <th>Show Order</th>
+            <th>Locations</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% showBreakdown.forEach(s => { %>
+            <tr>
+              <td><a href="/mymenu/<%= s.show_id %>" style="font-weight:600;color:#111;text-decoration:none;"><%= s.show_name %></a></td>
+              <td><%= s.show_date ? new Date(s.show_date).toLocaleDateString() : '—' %></td>
+              <td><%= s.venue || '—' %></td>
+              <td><%= s.coordinator_name || '—' %></td>
+              <td><%= s.collection_name || '—' %></td>
+              <td style="text-align:center"><a href="/look?show_id=<%= s.show_id %>" class="count-link"><%= s.look_count %></a></td>
+              <td style="text-align:center"><a href="/item?show_id=<%= s.show_id %>" class="count-link"><%= s.item_count %></a></td>
+              <td style="text-align:center"><a href="/model?show_id=<%= s.show_id %>" class="count-link"><%= s.model_count %></a></td>
+              <td style="text-align:center"><a href="/fitting?show_id=<%= s.show_id %>" class="count-link"><%= s.fitting_count %></a></td>
+              <td style="text-align:center"><a href="/alteration?show_id=<%= s.show_id %>" class="count-link"><%= s.alteration_count %></a></td>
+              <td style="text-align:center"><a href="/showorder?show_id=<%= s.show_id %>" class="count-link"><%= s.order_count %></a></td>
+              <td style="text-align:center"><a href="/location?show_id=<%= s.show_id %>" class="count-link"><%= s.location_count %></a></td>
+            </tr>
+          <% }) %>
+          <% if (!showBreakdown.length) { %>
+            <tr><td colspan="12" style="text-align:center;color:#888">No shows yet.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
     <!-- All coordinators table -->
     <h3 class="section-heading">ALL COORDINATORS</h3>
     <div class="table-wrapper">
@@ -70,6 +114,7 @@
             <th>Phone</th>
             <th>Role</th>
             <th>Shows</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -88,10 +133,18 @@
                 </span>
               </td>
               <td style="font-weight:600;"><%= c.show_count %></td>
+              <td>
+                <% if (c.reg_role !== 'developer') { %>
+                  <form action="/admin/deletecoordinator" method="POST" style="margin:0;" onsubmit="return confirm('Delete <%= c.first_name %> <%= c.last_name %>? This cannot be undone.')">
+                    <input type="hidden" name="user_id" value="<%= c.user_id %>"/>
+                    <button type="submit" style="background:#c0392b;color:#fff;border:none;padding:4px 12px;border-radius:6px;font-size:12px;cursor:pointer;">Delete</button>
+                  </form>
+                <% } %>
+              </td>
             </tr>
           <% }) %>
           <% if (!coordinators.length) { %>
-            <tr><td colspan="6" style="text-align:center;color:#888">No coordinators found.</td></tr>
+            <tr><td colspan="7" style="text-align:center;color:#888">No coordinators found.</td></tr>
           <% } %>
         </tbody>
       </table>
@@ -203,6 +256,15 @@
   color: #888;
   text-transform: uppercase;
   letter-spacing: .6px;
+}
+.count-link {
+  color: #111;
+  font-weight: 600;
+  text-decoration: none;
+}
+.count-link:hover {
+  text-decoration: underline;
+  color: #555;
 }
 </style>
 

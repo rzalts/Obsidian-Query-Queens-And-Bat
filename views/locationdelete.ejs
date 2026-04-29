@@ -2,12 +2,24 @@
 <%- include('partials/nav') %>
 <div class="shows-page">
   <a href="<%= user && user.role === 'developer' ? '/admin' : '/myshows' %>" style="text-decoration:none;color:inherit;display:block;"><h1 class="page-title">OBSIDIAN</h1></a>
-  <h2 class="page-subtitle">Location</h2>
+  <h2 class="page-subtitle">Delete Location</h2>
   <%- include('partials/flash') %>
   <form class="form-container" action="/locationdelete" method="POST">
     <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
-    <div class="form-group"><label>Location ID</label><input type="number" name="location_id" placeholder="Enter Location ID" required/></div>
-    <button type="submit" class="btn btn-dark" style="width:100%">- Delete Location</button>
+    <div class="form-group">
+      <label>Select Location to Delete</label>
+      <select name="location_id" required style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="" disabled selected>Choose a location…</option>
+        <% locations.forEach(l => { %>
+          <option value="<%= l.location_id %>">#<%= l.location_id %> — <%= l.location_name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <% if (!locations.length) { %>
+      <p style="text-align:center;color:#888;font-size:14px;">No locations available to delete.</p>
+    <% } else { %>
+      <button type="submit" class="btn btn-dark" style="width:100%;background:#c0392b;">- Delete Location</button>
+    <% } %>
   </form>
 </div>
 </body></html>

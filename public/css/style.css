@@ -239,6 +239,25 @@ body {
   font-weight: 500;
 }
 
+.show-name-box {
+  width: 150px;
+  height: 90px;
+  background: #111;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px;
+  letter-spacing: .4px;
+  transition: background .15s;
+}
+.show-card:hover .show-name-box {
+  background: #333;
+}
+
 /* ── Tables ── */
 .table-page {
   padding: 20px;
@@ -393,4 +412,30 @@ table tr:hover td { background: #f7f7f7; }
 @media (max-width: 480px) {
   .form-container { max-width: 100%; }
   .shows-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+
+/* ── Color swatches ── */
+.color-choice {
+  cursor: pointer;
+}
+.color-choice input[type="radio"] {
+  display: none;
+}
+.color-swatch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  height: 56px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .4px;
+  transition: transform .15s, box-shadow .15s;
+  box-shadow: 0 1px 4px rgba(0,0,0,.12);
+}
+.color-choice input[type="radio"]:checked + .color-swatch {
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 3px #111, 0 4px 12px rgba(0,0,0,.2);
 }

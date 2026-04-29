@@ -7,18 +7,10 @@
   <div class="shows-grid">
     <% shows.forEach(show => { %>
       <a href="/mymenu/<%= show.show_id %>" class="show-card">
-        <% if (show.logo_path) { %>
-          <img src="<%= show.logo_path %>" alt="<%= show.show_name %>" class="show-logo"/>
-        <% } else { %>
-          <div class="show-logo-placeholder">No Logo</div>
-        <% } %>
-        <span class="show-label"><%= show.show_name %></span>
+        <div class="show-name-box" style="background:<%= show.card_color || '#111111' %>;color:<%= (show.card_color || '#111111') === '#F5F0E8' ? '#333' : '#fff' %>"><%= show.show_name %></div>
         <% if (isAdmin && show.coordinator_name) { %>
           <span style="font-size:11px;color:#888;margin-top:2px;"><%= show.coordinator_name %></span>
         <% } %>
-        <span style="font-size:11px;margin-top:3px;padding:2px 7px;border-radius:10px;background:<%= show.ready ? '#d4edda' : '#fff3cd' %>;color:<%= show.ready ? '#155724' : '#856404' %>">
-          <%= show.ready ? '✓ Ready' : '⏳ Not Ready' %>
-        </span>
       </a>
     <% }) %>
     <% if (!shows.length) { %>

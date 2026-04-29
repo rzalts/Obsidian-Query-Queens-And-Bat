@@ -57,20 +57,36 @@ router.post('/collectionadd', requireLogin, async (req, res) => {
   try {
     await db.query(
       'INSERT INTO fit_collection (collection_name, brand, season, collection_year, collection_status) VALUES (?, ?, ?, ?, ?)',
-      [collection_name, brand, season, collection_year, collection_status]
+      [collection_name, brand || null, season || null, collection_year || null, collection_status]
     );
     req.flash('success', 'Collection added.');
     res.redirect(`/collection${show_id ? `?show_id=${show_id}` : ''}`);
   } catch (err) {
     console.error(err);
     req.flash('error', 'Failed to add collection.');
-    res.redirect('/collectionadd');
+    res.redirect(`/collectionadd${show_id ? `?show_id=${show_id}` : ''}`);
   }
 });
 
-router.get('/collectiondelete', requireLogin, (req, res) =>
-  res.render('collectiondelete', { show_id: req.query.show_id })
-);
+router.get('/collectiondelete', requireLogin, async (req, res) => {
+  const show_id = req.query.show_id;
+  try {
+    let collections = [];
+    if (show_id) {
+      [collections] = await db.query(
+        `SELECT c.collection_id, c.collection_name FROM fit_collection c
+         JOIN show_event se ON se.collection_id = c.collection_id
+         WHERE se.show_id = ? ORDER BY c.collection_id`, [show_id]);
+    } else {
+      [collections] = await db.query(
+        `SELECT collection_id, collection_name FROM fit_collection ORDER BY collection_id`);
+    }
+    res.render('collectiondelete', { show_id, collections });
+  } catch (err) {
+    console.error(err);
+    res.render('collectiondelete', { show_id, collections: [] });
+  }
+});
 
 router.post('/collectiondelete', requireLogin, async (req, res) => {
   const { collection_id, show_id } = req.body;
@@ -85,9 +101,25 @@ router.post('/collectiondelete', requireLogin, async (req, res) => {
   }
 });
 
-router.get('/collectionstatus', requireLogin, (req, res) =>
-  res.render('collectionstatus', { show_id: req.query.show_id })
-);
+router.get('/collectionstatus', requireLogin, async (req, res) => {
+  const show_id = req.query.show_id;
+  try {
+    let collections = [];
+    if (show_id) {
+      [collections] = await db.query(
+        `SELECT c.collection_id, c.collection_name, c.collection_status
+         FROM fit_collection c JOIN show_event se ON se.collection_id = c.collection_id
+         WHERE se.show_id = ?`, [show_id]);
+    } else {
+      [collections] = await db.query(
+        `SELECT collection_id, collection_name, collection_status FROM fit_collection ORDER BY collection_id`);
+    }
+    res.render('collectionstatus', { show_id, collections });
+  } catch (err) {
+    console.error(err);
+    res.render('collectionstatus', { show_id, collections: [] });
+  }
+});
 
 router.post('/collectionstatus', requireLogin, async (req, res) => {
   const { collection_id, new_status, show_id } = req.body;
@@ -101,7 +133,42 @@ router.post('/collectionstatus', requireLogin, async (req, res) => {
   } catch (err) {
     console.error(err);
     req.flash('error', 'Failed to update status.');
-    res.redirect('/collectionstatus');
+    res.redirect(`/collectionstatus${show_id ? `?show_id=${show_id}` : ''}`);
+  }
+});
+
+// Edit collection
+router.get('/collectionedit', requireLogin, async (req, res) => {
+  const show_id = req.query.show_id;
+  try {
+    let collection = null;
+    if (show_id) {
+      const [rows] = await db.query(
+        `SELECT c.* FROM fit_collection c JOIN show_event se ON se.collection_id = c.collection_id
+         WHERE se.show_id = ?`, [show_id]);
+      collection = rows[0] || null;
+    }
+    res.render('collectionedit', { show_id, collection });
+  } catch (err) {
+    console.error(err);
+    res.redirect(`/collection${show_id ? `?show_id=${show_id}` : ''}`);
+  }
+});
+
+router.post('/collectionedit', requireLogin, async (req, res) => {
+  const { collection_id, collection_name, brand, season, collection_year, collection_status, show_id } = req.body;
+  try {
+    await db.query(
+      `UPDATE fit_collection SET collection_name=?, brand=?, season=?, collection_year=?, collection_status=?
+       WHERE collection_id=?`,
+      [collection_name, brand || null, season || null, collection_year || null, collection_status, collection_id]
+    );
+    req.flash('success', 'Collection updated.');
+    res.redirect(`/collection${show_id ? `?show_id=${show_id}` : ''}`);
+  } catch (err) {
+    console.error(err);
+    req.flash('error', 'Failed to update collection.');
+    res.redirect(`/collectionedit${show_id ? `?show_id=${show_id}` : ''}`);
   }
 });
 
