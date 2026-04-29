@@ -7,11 +7,6 @@
   <form class="form-container" action="/itemadd" method="POST">
     <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
     <input type="hidden" name="collection_id" value="<%= collection_id || '' %>"/>
-    <% if (collection_id) { %>
-      <p style="font-size:12px;color:#888;margin-bottom:16px;">Collection ID: <strong><%= collection_id %></strong></p>
-    <% } else { %>
-      <div class="form-group"><label>Collection ID</label><input type="number" name="collection_id" placeholder="Enter Collection ID" required/></div>
-    <% } %>
     <div class="form-group">
       <label>Location</label>
       <select name="location_id" style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
