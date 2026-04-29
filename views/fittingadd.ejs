@@ -6,7 +6,15 @@
   <%- include('partials/flash') %>
   <form class="form-container" action="/fittingadd" method="POST" id="fittingForm">
     <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
-    <div class="form-group"><label>Look ID</label><input type="number" name="look_id" placeholder="Enter Look ID" required/></div>
+    <div class="form-group">
+      <label>Look</label>
+      <select name="look_id" required style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="" disabled selected>Choose a look…</option>
+        <% looks.forEach(l => { %>
+          <option value="<%= l.look_id %>">#<%= l.look_id %> — <%= l.look_category || 'No category' %><%= l.look_description ? ' · ' + l.look_description.substring(0,40) : '' %></option>
+        <% }) %>
+      </select>
+    </div>
 
     <div class="form-group">
       <label>Fitting Date</label>
@@ -41,16 +49,13 @@
     <button type="submit" class="btn btn-dark" style="width:100%">+ Add New Fitting</button>
   </form>
 </div>
-
 <script>
   const today = new Date();
   const yearSel = document.getElementById('fit_year');
   for (let y = today.getFullYear(); y <= today.getFullYear() + 6; y++) {
-    const opt = document.createElement('option');
-    opt.value = y; opt.textContent = y;
+    const opt = document.createElement('option'); opt.value = y; opt.textContent = y;
     yearSel.appendChild(opt);
   }
-
   document.getElementById('fittingForm').addEventListener('submit', function() {
     const m = document.getElementById('fit_month').value;
     const d = document.getElementById('fit_day').value;

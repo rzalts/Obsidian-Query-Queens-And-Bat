@@ -6,8 +6,21 @@
   <%- include('partials/flash') %>
   <form class="form-container" action="/itemadd" method="POST">
     <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
-    <div class="form-group"><label>Location ID</label><input type="number" name="location_id" placeholder="Enter Location ID" required/></div>
-    <div class="form-group"><label>Collection ID</label><input type="number" name="collection_id" placeholder="Enter Collection ID" required/></div>
+    <input type="hidden" name="collection_id" value="<%= collection_id || '' %>"/>
+    <% if (collection_id) { %>
+      <p style="font-size:12px;color:#888;margin-bottom:16px;">Collection ID: <strong><%= collection_id %></strong></p>
+    <% } else { %>
+      <div class="form-group"><label>Collection ID</label><input type="number" name="collection_id" placeholder="Enter Collection ID" required/></div>
+    <% } %>
+    <div class="form-group">
+      <label>Location</label>
+      <select name="location_id" style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="">— No location —</option>
+        <% locations.forEach(l => { %>
+          <option value="<%= l.location_id %>">#<%= l.location_id %> — <%= l.location_name %></option>
+        <% }) %>
+      </select>
+    </div>
     <div class="form-group"><label>Category</label><input type="text" name="item_category" placeholder="Enter Category"/></div>
     <div class="form-group"><label>Size</label><input type="number" name="item_size" placeholder="Enter Size (number)"/></div>
     <div class="form-group"><label>Description</label><input type="text" name="item_description" placeholder="Enter Description"/></div>

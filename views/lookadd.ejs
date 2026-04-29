@@ -2,16 +2,28 @@
 <%- include('partials/nav') %>
 <div class="shows-page">
   <a href="<%= user && user.role === 'developer' ? '/admin' : '/myshows' %>" style="text-decoration:none;color:inherit;display:block;"><h1 class="page-title">OBSIDIAN</h1></a>
-  <h2 class="page-subtitle">Look</h2>
+  <h2 class="page-subtitle">Add Look</h2>
   <%- include('partials/flash') %>
   <form class="form-container" action="/lookadd" method="POST">
     <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
-    <div class="form-group"><label>Collection ID</label><input type="number" name="collection_id" placeholder="Enter Collection ID" required/></div>
-    <div class="form-group"><label>Model ID</label><input type="number" name="model_id" placeholder="Enter Model ID" required/></div>
+    <input type="hidden" name="collection_id" value="<%= collection_id || '' %>"/>
+    <% if (collection_id) { %>
+      <p style="font-size:12px;color:#888;margin-bottom:16px;">Collection ID: <strong><%= collection_id %></strong></p>
+    <% } else { %>
+      <div class="form-group"><label>Collection ID</label><input type="number" name="collection_id" placeholder="Enter Collection ID" required/></div>
+    <% } %>
+    <div class="form-group">
+      <label>Model</label>
+      <select name="model_id" required style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="" disabled selected>Choose a model…</option>
+        <% models.forEach(m => { %>
+          <option value="<%= m.model_id %>">#<%= m.model_id %> — <%= m.first_name %> <%= m.last_name %></option>
+        <% }) %>
+      </select>
+    </div>
     <div class="form-group"><label>Category</label><input type="text" name="look_category" placeholder="Enter Category"/></div>
     <div class="form-group"><label>Description</label><input type="text" name="look_description" placeholder="Enter Description"/></div>
     <button type="submit" class="btn btn-dark" style="width:100%">+ Add Look</button>
   </form>
 </div>
-
 </body></html>

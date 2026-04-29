@@ -45,9 +45,25 @@ router.get('/alteration/export', requireLogin, async (req, res) => {
   } catch(err) { console.error(err); res.redirect(`/alteration${show_id?`?show_id=${show_id}`:''}`); }
 });
 
-router.get('/alterationadd', requireLogin, (req, res) =>
-  res.render('alterationadd', { show_id: req.query.show_id })
-);
+router.get('/alterationadd', requireLogin, async (req, res) => {
+  const show_id = req.query.show_id;
+  let items = [], fittings = [];
+  if (show_id) {
+    [items] = await db.query(
+      `SELECT i.item_id, i.item_category, i.item_description
+       FROM item i JOIN show_event se ON se.collection_id = i.collection_id
+       WHERE se.show_id = ? ORDER BY i.item_id`, [show_id]);
+    [fittings] = await db.query(
+      `SELECT f.fitting_id, f.fitting_date, f.fitting_status
+       FROM fitting f JOIN fashion_look l ON l.look_id = f.look_id
+       JOIN show_event se ON se.collection_id = l.collection_id
+       WHERE se.show_id = ? ORDER BY f.fitting_id`, [show_id]);
+  } else {
+    [items]    = await db.query('SELECT item_id, item_category, item_description FROM item ORDER BY item_id');
+    [fittings] = await db.query('SELECT fitting_id, fitting_date, fitting_status FROM fitting ORDER BY fitting_id');
+  }
+  res.render('alterationadd', { show_id, items, fittings });
+});
 
 router.post('/alterationadd', requireLogin, async (req, res) => {
   const { item_id, fitting_id, alteration_type, date_needed_by, alteration_status, show_id } = req.body;

@@ -6,8 +6,24 @@
   <%- include('partials/flash') %>
   <form class="form-container" action="/alterationadd" method="POST" id="alterationForm">
     <input type="hidden" name="show_id" value="<%= show_id || '' %>"/>
-    <div class="form-group"><label>Item ID</label><input type="number" name="item_id" placeholder="Enter Item ID" required/></div>
-    <div class="form-group"><label>Fitting ID</label><input type="number" name="fitting_id" placeholder="Enter Fitting ID" required/></div>
+    <div class="form-group">
+      <label>Item</label>
+      <select name="item_id" required style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="" disabled selected>Choose an item…</option>
+        <% items.forEach(i => { %>
+          <option value="<%= i.item_id %>">#<%= i.item_id %> — <%= i.item_category || 'No category' %><%= i.item_description ? ' · ' + i.item_description.substring(0,40) : '' %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Fitting</label>
+      <select name="fitting_id" required style="width:100%;padding:12px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;background:#fff;">
+        <option value="" disabled selected>Choose a fitting…</option>
+        <% fittings.forEach(f => { %>
+          <option value="<%= f.fitting_id %>">#<%= f.fitting_id %> — <%= f.fitting_date ? new Date(f.fitting_date).toLocaleDateString() : 'No date' %> · <%= f.fitting_status || '' %></option>
+        <% }) %>
+      </select>
+    </div>
     <div class="form-group"><label>Alteration Type</label><input type="text" name="alteration_type" placeholder="Enter Alteration Type" required/></div>
 
     <div class="form-group">
@@ -42,16 +58,13 @@
     <button type="submit" class="btn btn-dark" style="width:100%">+ Add New Alteration</button>
   </form>
 </div>
-
 <script>
   const today = new Date();
   const yearSel = document.getElementById('alt_year');
   for (let y = today.getFullYear(); y <= today.getFullYear() + 6; y++) {
-    const opt = document.createElement('option');
-    opt.value = y; opt.textContent = y;
+    const opt = document.createElement('option'); opt.value = y; opt.textContent = y;
     yearSel.appendChild(opt);
   }
-
   document.getElementById('alterationForm').addEventListener('submit', function() {
     const m = document.getElementById('alt_month').value;
     const d = document.getElementById('alt_day').value;

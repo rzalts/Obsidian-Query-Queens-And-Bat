@@ -45,9 +45,19 @@ router.get('/fitting/export', requireLogin, async (req, res) => {
   } catch(err) { console.error(err); res.redirect(`/fitting${show_id?`?show_id=${show_id}`:''}`); }
 });
 
-router.get('/fittingadd', requireLogin, (req, res) =>
-  res.render('fittingadd', { show_id: req.query.show_id })
-);
+router.get('/fittingadd', requireLogin, async (req, res) => {
+  const show_id = req.query.show_id;
+  let looks = [];
+  if (show_id) {
+    [looks] = await db.query(
+      `SELECT l.look_id, l.look_category, l.look_description
+       FROM fashion_look l JOIN show_event se ON se.collection_id = l.collection_id
+       WHERE se.show_id = ? ORDER BY l.look_id`, [show_id]);
+  } else {
+    [looks] = await db.query('SELECT look_id, look_category, look_description FROM fashion_look ORDER BY look_id');
+  }
+  res.render('fittingadd', { show_id, looks });
+});
 
 router.post('/fittingadd', requireLogin, async (req, res) => {
   const { look_id, fitting_date, fitting_status, show_id } = req.body;

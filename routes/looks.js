@@ -45,9 +45,16 @@ router.get('/look/export', requireLogin, async (req, res) => {
   } catch(err) { console.error(err); res.redirect(`/look${show_id?`?show_id=${show_id}`:''}`); }
 });
 
-router.get('/lookadd', requireLogin, (req, res) =>
-  res.render('lookadd', { show_id: req.query.show_id })
-);
+router.get('/lookadd', requireLogin, async (req, res) => {
+  const show_id = req.query.show_id;
+  let collection_id = null;
+  if (show_id) {
+    const [[row]] = await db.query('SELECT collection_id FROM show_event WHERE show_id=?', [show_id]);
+    if (row) collection_id = row.collection_id;
+  }
+  const [models] = await db.query('SELECT model_id, first_name, last_name FROM model ORDER BY first_name');
+  res.render('lookadd', { show_id, collection_id, models });
+});
 
 router.post('/lookadd', requireLogin, async (req, res) => {
   const { collection_id, model_id, look_category, look_description, show_id } = req.body;
